@@ -81,10 +81,10 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
         Constants.tv.setText(t2.substring(t2.length()-4,t2.length()));
         Constants.toggleUI();
 
-        AudioManager man = (AudioManager)cxt.getSystemService(Context.AUDIO_SERVICE);
-        for (Integer i : streams) {
-            man.setStreamVolume(i,(int)(man.getStreamMaxVolume(i)),0);
-        }
+//        AudioManager man = (AudioManager)cxt.getSystemService(Context.AUDIO_SERVICE);
+//        for (Integer i : streams) {
+//            man.setStreamVolume(i,(int)(man.getStreamMaxVolume(i)),0);
+//        }
 
 //        int calc=(Constants.recTime+Constants.initSleep)+((Constants.recTime+5)*(Constants.rounds-1));
         int calc=(Constants.recTime+Constants.initSleep)*Constants.rounds;

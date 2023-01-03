@@ -120,6 +120,7 @@ public class Constants {
 
         float bufSizeInSamples = fs*bufSizeInSeconds;
         bufferSize=(int)Math.ceil(bufSizeInSamples/minbuffersize)*minbuffersize;
+        bufferSize+=(minbuffersize*3);
 
         float bigBufferSizeInSamples = fs*bigBufferSizeInSeconds;
         bigBufferTimes=((int)Math.ceil(bigBufferSizeInSamples/bufferSize));

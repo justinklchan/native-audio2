@@ -1,3 +1,5 @@
 # ninja log v5
 0	529	1672706759	CMakeFiles/native-audio-jni.dir/native-audio-jni.c.o	205d1344531bde15
 530	857	1672706760	/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/build/intermediates/cmake/debug/obj/x86/libnative-audio-jni.so	c802d79323f8475
+0	184	1672733089	CMakeFiles/native-audio-jni.dir/native-audio-jni.c.o	205d1344531bde15
+184	344	1672733089	/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/build/intermediates/cmake/debug/obj/x86/libnative-audio-jni.so	c802d79323f8475
