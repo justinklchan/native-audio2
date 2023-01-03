@@ -694,7 +694,7 @@ void* xcorr_thread(void* context) {
             if (cxt->processedSegments == 0) {
                 short *data = cxt->data + (cxt->bigBufferSize * (cxt->processedSegments));
 //                char* str1=getString_d(data,cxt->bigBufferSize);
-//                __android_log_print(ANDROID_LOG_VERBOSE, "debug5","offset1 %d",(cxt->bigBufferSize * (cxt->processedSegments)));
+//                __android_log_print(ANDROID_LOG_VERBOSE, "debug7","offset1 %d",(cxt->bigBufferSize * (cxt->processedSegments)));
                 globalOffset = (cxt->processedSegments) * cxt->bigBufferSize;
                 result = xcorr_helper2(context, data, globalOffset, cxt->bigBufferSize);
             }
@@ -1762,7 +1762,7 @@ int naiser_corr(double* signal, int total_length , int Nu, int N0, int DIVIDE_FA
     int max_idx = find_max(Mn, (unsigned long int)len_corr);
     double max_value = Mn[max_idx];
 
-//    char* str=getString_d(Mn,len_corr);
+    char* str=getString_d(Mn,len_corr);
 //    char* str2=getString_d(signal,total_length);
 
     last_naiser_val = max_value;
@@ -1975,12 +1975,11 @@ int corr2(int N, int xcorr_idx, double* filteredData, mycontext* cxt2, int globa
     unsigned long int N0 = cxt2->N0;
     jboolean CP = cxt2->CP;
     jint win_size = cxt2->win_size;
-//    jint win_size = 0;
     jint bias = cxt2->bias;
 
-//    jint Nrx=Ns2+(win_size*2);
-    jint Nrx=Ns2+(win_size);
+    jint Nrx=Ns2+win_size;
     int start_idx=xcorr_idx-win_size;
+//    int start_idx=xcorr_idx;
     int end_idx=start_idx+Nrx;
 
     __android_log_print(ANDROID_LOG_VERBOSE, "debug2","corr2 %d %d %d",start_idx,end_idx,N);
@@ -2075,12 +2074,6 @@ int corr2(int N, int xcorr_idx, double* filteredData, mycontext* cxt2, int globa
 
 int* xcorr_helper2(void* context, short* data, int globalOffset, int N) {
     mycontext* cxt = (mycontext*)context;
-//    __android_log_print(ANDROID_LOG_VERBOSE, "debug2", "xcorr2_helper %d %d",globalOffset,N);
-
-//    __android_log_print(ANDROID_LOG_VERBOSE, "debug", "***xcorr helper %d %d %d",
-//                        naiser_index_to_process,cxt->processedSegments,cxt->getOneMoreFlag);
-
-//    __android_log_print(ANDROID_LOG_VERBOSE, "debug", "***normal corr");
 
     int N_ref = cxt->naiserTx2Count;
 
@@ -2122,6 +2115,18 @@ int* xcorr_helper2(void* context, short* data, int globalOffset, int N) {
     result[1] = xcorr_out[1]; //xcorr val
 
     if (cxt->naiser && xcorr_out[0] > 0) {
+        if (xcorr_out[0]-cxt->win_size < 0) {
+            __android_log_print(ANDROID_LOG_VERBOSE, "debug6", "LESS THAN");
+            xcorr_out[0] += cxt->win_size;
+            short *data2 = cxt->data + (globalOffset-cxt->win_size);
+            N=cxt->bigBufferSize*2+cxt->win_size;
+            filteredData = filter_s(data2, N);
+            for (int i = 0; i < N; i++) {
+                filteredData[i] /= 10000.0;
+            }
+            double* filteredData2=filteredData+filt_offset;
+            N -= filt_offset;
+        }
         int idx = corr2(N,xcorr_out[0],filteredData2,cxt,globalOffset);
         result[2] = idx; // naiser out
 //        __android_log_print(ANDROID_LOG_VERBOSE, "debug", "***corr2 output %d %d %d",result[0],result[1],result[2]);
