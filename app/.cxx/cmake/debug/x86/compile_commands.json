@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/.cxx/cmake/debug/x86",
+  "command": "/root/Android/Sdk/ndk/22.1.7171670/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=i686-none-linux-android23 --gcc-toolchain=/root/Android/Sdk/ndk/22.1.7171670/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/root/Android/Sdk/ndk/22.1.7171670/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Dnative_audio_jni_EXPORTS -I/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/../../../../fftw3/include -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mstackrealign -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -std=c99 -Wall -O0 -fno-limit-debug-info  -fPIC -o CMakeFiles/native-audio-jni.dir/native-audio-jni.c.o -c /home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/native-audio-jni.c",
+  "file": "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/native-audio-jni.c"
+}
+]

@@ -1,0 +1,65 @@
+ninja: Entering directory `/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/.cxx/cmake/debug/x86'
+[1/2] Building C object CMakeFiles/native-audio-jni.dir/native-audio-jni.c.o
+/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/native-audio-jni.c:194:9: warning: unused variable 'maxLineLength' [-Wunused-variable]
+    int maxLineLength = 1023;
+        ^
+/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/native-audio-jni.c:205:9: warning: unused variable 'maxLineLength' [-Wunused-variable]
+    int maxLineLength = 1023;
+        ^
+/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/native-audio-jni.c:791:1: warning: non-void function does not return a value [-Wreturn-type]
+}
+^
+/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/native-audio-jni.c:868:9: warning: unused variable 'offset' [-Wunused-variable]
+    int offset=0;
+        ^
+/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/native-audio-jni.c:1465:11: warning: initializing 'char *' with an expression of type 'const char *' discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+    char* topfilename = (*env)->GetStringUTFChars(env, ttfilename, NULL);
+          ^             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/native-audio-jni.c:1466:11: warning: initializing 'char *' with an expression of type 'const char *' discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+    char* bottomfilename = (*env)->GetStringUTFChars(env, tbfilename, NULL);
+          ^                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/native-audio-jni.c:1467:11: warning: initializing 'char *' with an expression of type 'const char *' discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+    char* meta_filename = (*env)->GetStringUTFChars(env, tmeta_filename, NULL);
+          ^               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/native-audio-jni.c:1401:12: warning: unused variable 'data' [-Wunused-variable]
+    short* data = (short*)((*env)->GetShortArrayElements(env, tempData, NULL));
+           ^
+/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/native-audio-jni.c:1572:11: warning: initializing 'char *' with an expression of type 'const char *' discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+    char* filename = (*env)->GetStringUTFChars(env, tfilename, NULL);
+          ^          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/native-audio-jni.c:1790:74: warning: format specifies type 'int' but the argument has type 'long' [-Wformat]
+            __android_log_print(ANDROID_LOG_VERBOSE, "debug", "out2 %d", lround(middle));
+                                                                    ~~   ^~~~~~~~~~~~~~
+                                                                    %ld
+/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/native-audio-jni.c:1746:11: warning: unused variable 'str2' [-Wunused-variable]
+    char* str2=getString_d(signal,total_length);
+          ^
+/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/native-audio-jni.c:1745:11: warning: unused variable 'str' [-Wunused-variable]
+    char* str=getString_d(Mn,len_corr);
+          ^
+/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/native-audio-jni.c:1865:14: warning: unused variable 'pre2' [-Wunused-variable]
+    jdouble* pre2 = (*env)->GetDoubleArrayElements(env,tpre2, NULL);
+             ^
+/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/native-audio-jni.c:1923:9: warning: unused variable 'prevpeakval' [-Wunused-variable]
+    int prevpeakval=0;
+        ^
+/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/native-audio-jni.c:1948:9: warning: unused variable 'offset' [-Wunused-variable]
+    int offset=0;
+        ^
+/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/native-audio-jni.c:1945:10: warning: unused variable 'out' [-Wunused-variable]
+    int* out = calloc(2,sizeof(int));
+         ^
+/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/native-audio-jni.c:2154:15: warning: unused variable 'nstr' [-Wunused-variable]
+        char *nstr = getString_d(signal2, Nrx);
+              ^
+/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/native-audio-jni.c:133:22: warning: unused variable 'bqPlayerMuteSolo' [-Wunused-variable]
+static SLMuteSoloItf bqPlayerMuteSolo;
+                     ^
+/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/native-audio-jni.c:184:15: warning: unused variable 'nextBuffer' [-Wunused-variable]
+static short *nextBuffer;
+              ^
+/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/native-audio-jni.c:185:17: warning: unused variable 'nextSize' [-Wunused-variable]
+static unsigned nextSize;
+                ^
+20 warnings generated.
+[2/2] Linking C shared library /home/justin/Downloads/lowlatencyaudio-main/native-audio/app/build/intermediates/cmake/debug/obj/x86/libnative-audio-jni.so
