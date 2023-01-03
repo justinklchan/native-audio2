@@ -657,6 +657,7 @@ void setReply(int idx, mycontext* cxt) {
 //                                cxt->initialDelay, idx, replyIdx1);
             reply_ready = JNI_TRUE;
             cxt->sendReply = JNI_FALSE;
+            chirpsPlayed+=1;
         }
     }
 }

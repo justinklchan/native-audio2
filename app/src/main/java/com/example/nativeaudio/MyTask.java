@@ -225,6 +225,7 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
 //                                int[] indices = NativeAudio.getReplyIndexes();
 //                                int speakerSeg = Constants.bufferSize*(NativeAudio.getQueuedSpeakerSegments()-1);
                                 int cc = NativeAudio.getNumChirps();
+                                Log.e("debug5","num chirps "+cc);
                                 (NativeAudio.av).runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -240,7 +241,7 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
 //                                            Constants.clayout.setBackgroundColor(Color.argb(255, 255, 0, 0));
 //                                            replySet1 =true;
 //                                        }
-                                        if (cc%2==0) {
+                                        if (cc%2==1) {
                                             Constants.clayout.setBackgroundColor(Color.argb(255, 255, 0, 0));
                                         }
                                         else {
