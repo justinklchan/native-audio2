@@ -23,7 +23,7 @@ public class Constants {
 //    public static int bufferSize = 192*250; // 48000
 //    public static int bufferSize = 192*500; // 96000
     public static int minbuffersize;
-    public static int bufferSize;
+    public static int bufferSize,bigBufferSize,bigBufferTimes;
     public static boolean stop=false;
     public static boolean initsleeping=false;
     static EditText et1,et2,et3,et4,et5,et6,et7,et8,et9,et10,et11,et12,et13,et14,et15;
@@ -53,6 +53,7 @@ public class Constants {
     static int rounds = 1;
     static float initialDelay = 3f;
     static float bufSizeInSeconds=.01f;
+    static float bigBufferSizeInSeconds = .5f;
     static ConstraintLayout clayout;
 
     static ArrayList<Long> time_acc,time_gyro,time_mag,time_pressure;
@@ -119,6 +120,11 @@ public class Constants {
 
         float bufSizeInSamples = fs*bufSizeInSeconds;
         bufferSize=(int)Math.ceil(bufSizeInSamples/minbuffersize)*minbuffersize;
+
+        float bigBufferSizeInSamples = fs*bigBufferSizeInSeconds;
+        bigBufferTimes=((int)Math.ceil(bigBufferSizeInSamples/bufferSize));
+        bigBufferSize = bigBufferTimes*bufferSize;
+
         loadData(cxt);
     }
 

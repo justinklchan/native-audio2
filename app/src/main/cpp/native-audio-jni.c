@@ -129,6 +129,8 @@ typedef struct mycontext{
     int ts_len;
     char* speaker_ts_fname;
     char* mic_ts_fname;
+    int bigBufferSize;
+    int bigBufferTimes;
 }mycontext;
 
 jboolean wroteToDisk=JNI_FALSE;
@@ -315,10 +317,7 @@ void static bqPlayerCallback(SLAndroidSimpleBufferQueueItf bq, void *context)
                             "REPLY READY %d %d",receivedIdx,replyIdx1);
         int counter2=0;
 
-//        int totalLen = cxt->bufferSize*cxt->totalSegments;
         int start_idx = replyIdx1;
-//        __android_log_print(ANDROID_LOG_VERBOSE, "debug",
-//                            "FILLING REPLY %d %d %d %d",counter2,start_idx,start_idx+cxt->preamble_len,totalLen-cxt->bufferSize);
         int counter=0;
         for (int i = start_idx; i < start_idx + cxt->preamble_len; i++) {
             cxt->data[i] = cxt->refData[counter++];
@@ -347,6 +346,17 @@ void static bqPlayerCallback(SLAndroidSimpleBufferQueueItf bq, void *context)
 
         cxt->playOffset += cxt->bufferSize;
         cxt->queuedSegments+=1;
+    }
+    else {
+        __android_log_print(ANDROID_LOG_VERBOSE, "debug2", "write speaker %s %d",cxt->speaker_ts_fname,cxt->ts_len);
+        FILE* fp = fopen(cxt->speaker_ts_fname,"w+");
+        fp = fopen(cxt->speaker_ts_fname,"w+");
+        for (int i = 0; i < cxt->ts_len-1; i++) {
+            fprintf(fp,"%d\n",cxt->speaker_ts[i]);
+        }
+        fclose(fp);
+        free(cxt->speaker_ts);
+        __android_log_print(ANDROID_LOG_VERBOSE, "debug2", "write speaker done");
     }
 }
 
@@ -671,18 +681,18 @@ void* xcorr_thread(void* context) {
 
         if (!cxt->getOneMoreFlag) {
             __android_log_print(ANDROID_LOG_VERBOSE, "debug",
-                                "xcorr helper1 %d %d %d",cxt->processedSegments,(cxt->processedSegments) * cxt->bufferSize, cxt->bufferSize);
+                                "xcorr helper1 %d %d %d",cxt->processedSegments,(cxt->processedSegments) * cxt->bigBufferSize, cxt->bigBufferSize);
             int *result = NULL;
             int globalOffset=0;
             if (cxt->processedSegments == 0) {
-                short *data = cxt->data + (cxt->bufferSize * (cxt->processedSegments));
-                globalOffset = (cxt->processedSegments) * cxt->bufferSize;
-                result = xcorr_helper2(context, data, globalOffset, cxt->bufferSize);
+                short *data = cxt->data + (cxt->bigBufferSize * (cxt->processedSegments));
+                globalOffset = (cxt->processedSegments) * cxt->bigBufferSize;
+                result = xcorr_helper2(context, data, globalOffset, cxt->bigBufferSize);
             }
             else {
-                short *data = cxt->data + (cxt->bufferSize * (cxt->processedSegments-1));
-                globalOffset = (cxt->processedSegments-1) * cxt->bufferSize;
-                result = xcorr_helper2(context, data, globalOffset, cxt->bufferSize*2);
+                short *data = cxt->data + (cxt->bigBufferSize * (cxt->processedSegments-1));
+                globalOffset = (cxt->processedSegments-1) * cxt->bigBufferSize;
+                result = xcorr_helper2(context, data, globalOffset, cxt->bigBufferSize*2);
             }
 
             local_xcorr_idx = result[0];
@@ -693,12 +703,12 @@ void* xcorr_thread(void* context) {
                 __android_log_print(ANDROID_LOG_VERBOSE, "debug", "get flag? %d %d %d %d",
                                     local_xcorr_idx, local_xcorr_idx + cxt->calibSigLen + synclag,
                                     local_xcorr_idx + cxt->naiserTx2Count + cxt->win_size,
-                                    cxt->bufferSize);
+                                    cxt->bigBufferSize);
 
-                jboolean c1 = cxt->processedSegments == 0 && local_xcorr_idx + cxt->naiserTx2Count + synclag >= cxt->bufferSize;
-                jboolean c2 = cxt->processedSegments == 0 && local_xcorr_idx + cxt->naiserTx2Count + cxt->win_size >= cxt->bufferSize;
-                jboolean c3 = cxt->processedSegments > 0 && local_xcorr_idx + cxt->naiserTx2Count + synclag >= cxt->bufferSize*2;
-                jboolean c4 = cxt->processedSegments > 0 && local_xcorr_idx + cxt->naiserTx2Count + cxt->win_size >= cxt->bufferSize*2;
+                jboolean c1 = cxt->processedSegments == 0 && local_xcorr_idx + cxt->naiserTx2Count + synclag >= cxt->bigBufferSize;
+                jboolean c2 = cxt->processedSegments == 0 && local_xcorr_idx + cxt->naiserTx2Count + cxt->win_size >= cxt->bigBufferSize;
+                jboolean c3 = cxt->processedSegments > 0 && local_xcorr_idx + cxt->naiserTx2Count + synclag >= cxt->bigBufferSize*2;
+                jboolean c4 = cxt->processedSegments > 0 && local_xcorr_idx + cxt->naiserTx2Count + cxt->win_size >= cxt->bigBufferSize*2;
                 if (c1 || c2 || c3 || c4) {
                     __android_log_print(ANDROID_LOG_VERBOSE, "debug",
                                         "get one more flag set to true");
@@ -731,18 +741,18 @@ void* xcorr_thread(void* context) {
         }
         else {
             // look back half a second
-            int globalOffset = (cxt->processedSegments-1) * (cxt->bufferSize);
+            int globalOffset = (cxt->processedSegments-1) * (cxt->bigBufferSize);
 
             short *data = cxt->data +
-                          (int) ((cxt->bufferSize * (double) (cxt->processedSegments - 1)));
+                          (int) ((cxt->bigBufferSize * (double) (cxt->processedSegments - 1)));
 
             __android_log_print(ANDROID_LOG_VERBOSE, "debug", "***samples %d %hi %hi %hi %hi %hi",
-                                cxt->bufferSize * (cxt->processedSegments),data[0],data[1],data[2],data[3],data[4]);
+                                cxt->bigBufferSize * (cxt->processedSegments),data[0],data[1],data[2],data[3],data[4]);
 
             __android_log_print(ANDROID_LOG_VERBOSE, "debug",
-                                "xcorr helper2 %d %d %d",cxt->processedSegments,(cxt->processedSegments-1) * cxt->bufferSize,cxt->bufferSize);
+                                "xcorr helper2 %d %d %d",cxt->processedSegments,(cxt->processedSegments-1) * cxt->bigBufferSize,cxt->bigBufferSize);
 
-            int *result = xcorr_helper2(context, data, globalOffset, cxt->bufferSize*2);
+            int *result = xcorr_helper2(context, data, globalOffset, cxt->bigBufferSize*2);
 
             local_xcorr_idx = result[0];
             int naiser_out = result[2];
@@ -853,97 +863,102 @@ void stopithelper() {
     }
 }
 
+int micCounter=0;
 // this callback handler is called every time a buffer finishes recording
 void bqRecorderCallback(SLAndroidSimpleBufferQueueItf bq, void *context)
 {
-//    assert(bq == recorderBufferQueue);
-//
-//    mycontext* cxt=(mycontext*)context;
-//
-//    int offset=0;
-//    if (cxt->processedSegments==0) {
-//        int maxval1=0;
-//        int maxval2=0;
-//
-//        int counter=0;
-//        for (int i = 0; i < cxt->bufferSize; i++) {
-//            int val1 = cxt->bigdata[(cxt->processedSegments*cxt->bufferSize*2)+counter];
-//            int val2 = cxt->bigdata[(cxt->processedSegments*cxt->bufferSize*2)+counter+1];
-//            if (val1 > maxval1) {
-//                maxval1=val1;
-//            }
-//            if (val2 > maxval2) {
-//                maxval2=val2;
-//            }
-//            counter+=2;
-//        }
-//        if (maxval1 > maxval2) {
-//            cxt->recorder_offset = 0;
-//        }
-//        else {
-//            cxt->recorder_offset = 1;
-//        }
-//    }
-//
-//    int counter=cxt->recorder_offset;
-//    for (int i = 0; i < cxt->bufferSize; i++) {
-//        cxt->data[cxt->processedSegments*cxt->bufferSize+i] = cxt->bigdata[(cxt->processedSegments*cxt->bufferSize*2)+counter];
-//        counter+=2;
-//    }
-//
-//    if (cxt->queuedSegments<cxt->totalSegments) {
-//        SLresult result=(*recorderBufferQueue)->Enqueue(recorderBufferQueue,
-//                                                        (cxt->bigdata)+(cxt->bufferSize*2*cxt->queuedSegments),
-//                                                        cxt->bufferSize*2*sizeof(short));
-//        assert(SL_RESULT_SUCCESS == result);
-//        cxt->queuedSegments+=1;
-//    }
-//
-//    // bug: if the time is too short, then this will use 'old' values of an index (i.e. not naiser-refined)
+    assert(bq == recorderBufferQueue);
+//    __android_log_print(ANDROID_LOG_VERBOSE, "debug2", "recorder callbakc");
+
+    mycontext* cxt=(mycontext*)context;
+    cxt->mic_ts[micCounter++] = now_ms();
+
+    int offset=0;
+    // determine whether top/bottom microphone is the odd/even sample in the buffer
+    if (cxt->processedSegments==0) {
+        int maxval1=0;
+        int maxval2=0;
+
+        int counter=0;
+        for (int i = 0; i < cxt->bufferSize; i++) {
+            int val1 = cxt->bigdata[(cxt->processedSegments*cxt->bufferSize*2)+counter];
+            int val2 = cxt->bigdata[(cxt->processedSegments*cxt->bufferSize*2)+counter+1];
+            if (val1 > maxval1) {
+                maxval1=val1;
+            }
+            if (val2 > maxval2) {
+                maxval2=val2;
+            }
+            counter+=2;
+        }
+        if (maxval1 > maxval2) {
+            cxt->recorder_offset = 0;
+        }
+        else {
+            cxt->recorder_offset = 1;
+        }
+    }
+
+    // we only process data from one microphone, we use the one with higher amplitude (probably bottom one)
+    int counter=cxt->recorder_offset;
+    for (int i = 0; i < cxt->bufferSize; i++) {
+        cxt->data[cxt->processedSegments*cxt->bufferSize+i] = cxt->bigdata[(cxt->processedSegments*cxt->bufferSize*2)+counter];
+        counter+=2;
+    }
+
+    if (cxt->queuedSegments<cxt->totalSegments) {
+        SLresult result=(*recorderBufferQueue)->Enqueue(recorderBufferQueue,
+                                                        (cxt->bigdata)+(cxt->bufferSize*2*cxt->queuedSegments),
+                                                        cxt->bufferSize*2*sizeof(short));
+        assert(SL_RESULT_SUCCESS == result);
+        cxt->queuedSegments+=1;
+    }
+
+    // bug: if the time is too short, then this will use 'old' values of an index (i.e. not naiser-refined)
     jboolean c1 = forcewrite&&!wroteToDisk;
     jboolean c2 = !cxt->responder && xcorr_counter==4;
     jboolean c3 = !cxt->responder&&cxt->queuedSegments==cxt->totalSegments;
     jboolean c5 = (cxt->responder&&cxt->queuedSegments==cxt->totalSegments);
     if ((c1 || c2 || c3 || c5) && !wroteToDisk) {
+        __android_log_print(ANDROID_LOG_VERBOSE, "debug2", "write to mic disk %s %d",cxt->mic_ts_fname,cxt->ts_len);
+
         // write to disk
         wroteToDisk=JNI_TRUE;
-        FILE* fp = fopen(cxt->bottomfilename,"w+");
-//        for (int i = cxt->recorder_offset; i < cxt->totalSegments*cxt->bufferSize*2-2; i+=2) {
-//            fprintf(fp,"%d ",cxt->bigdata[i]);
-//        }
-//        fclose(fp);
-//
-//        fp = fopen(cxt->topfilename,"w+");
-//        for (int i = -(cxt->recorder_offset-1); i < cxt->totalSegments*cxt->bufferSize*2-2; i+=2) {
-//            fprintf(fp,"%d ",cxt->bigdata[i]);
-//        }
-//        fclose(fp);
-
-//        fp = fopen(cxt->mic_ts_fname,"w+");
-//        for (int i = 0; i < cxt->ts_len; i++) {
-//            fprintf(fp,"%d ",cxt->mic_ts[i]);
-//        }
-//        fclose(fp);
-//        free(cxt->mic_ts);
-//
-        fp = fopen(cxt->speaker_ts_fname,"w+");
-        for (int i = 0; i < cxt->ts_len; i++) {
-            fprintf(fp,"%d ",cxt->speaker_ts[i]);
+        FILE* fp = fopen(cxt->mic_ts_fname,"w+");
+        fp = fopen(cxt->mic_ts_fname,"w+");
+        for (int i = 0; i < cxt->ts_len-1; i++) {
+            fprintf(fp,"%d\n",cxt->mic_ts[i]);
         }
         fclose(fp);
-        free(cxt->speaker_ts);
+        free(cxt->mic_ts);
 
-//        ///////////////////////////////////////////////////////////////////////
+        fp = fopen(cxt->bottomfilename,"w+");
+        for (int i = cxt->recorder_offset; i < cxt->totalSegments*cxt->bufferSize*2-2; i+=2) {
+            fprintf(fp,"%d ",cxt->bigdata[i]);
+        }
+        fclose(fp);
+
+        fp = fopen(cxt->topfilename,"w+");
+        for (int i = -(cxt->recorder_offset-1); i < cxt->totalSegments*cxt->bufferSize*2-2; i+=2) {
+            fprintf(fp,"%d ",cxt->bigdata[i]);
+        }
+        fclose(fp);
+
+        ///////////////////////////////////////////////////////////////////////
 
         wroteToDisk=JNI_TRUE;
 
+        __android_log_print(ANDROID_LOG_VERBOSE, "debug2", "finish writing");
         stopithelper();
     }
 
-//    if (!wroteToDisk && cxt->runXcorr) {
-//        pthread_t t;
-//        pthread_create(&t, NULL, xcorr_thread, context);
-//    }
+    if (!wroteToDisk && cxt->runXcorr) {
+        if (micCounter%cxt->bigBufferTimes==0) {
+            __android_log_print(ANDROID_LOG_VERBOSE, "debug2", "process %d %d",micCounter,cxt->bigBufferTimes);
+            pthread_t t;
+            pthread_create(&t, NULL, xcorr_thread, context);
+        }
+    }
 }
 
 // create the engine and output mix objects
@@ -1338,7 +1353,7 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
                                                    jint N0, jboolean CP, jfloat naiserThresh, jfloat naiserShoulder,
                                                    jint win_size, jint bias, jint seekback, jdouble pthresh, int round,
                                                    int filenum, jboolean runxcorr, jfloat initialDelay, jstring mic_ts_fname,
-                                                   jstring speaker_ts_fname) {
+                                                   jstring speaker_ts_fname, int bigBufferSize,int bigBufferTimes) {
     freed=JNI_FALSE;
     timeOffsetUpdated=JNI_FALSE;
     int round0 = 0;
@@ -1427,7 +1442,8 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
     cxt->totalSegments=totalSpeakerLoops;
     cxt->queuedSegments=1;
     cxt->responder=reply;
-    cxt->mic_ts = calloc((recordTime*FS)/bufferSize,sizeof(long));
+    char* speaker_ts_filename_str = (*env)->GetStringUTFChars(env, speaker_ts_fname, NULL);
+    cxt->speaker_ts_fname=speaker_ts_filename_str;
     cxt->speaker_ts = calloc((recordTime*FS)/bufferSize,sizeof(long));
     cxt->ts_len=(recordTime*FS)/bufferSize;
 
@@ -1444,7 +1460,6 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
     char* bottomfilename = (*env)->GetStringUTFChars(env, tbfilename, NULL);
     char* meta_filename = (*env)->GetStringUTFChars(env, tmeta_filename, NULL);
     char* mic_ts_filename_str = (*env)->GetStringUTFChars(env, mic_ts_fname, NULL);
-    char* speaker_ts_filename_str = (*env)->GetStringUTFChars(env, speaker_ts_fname, NULL);
 
     wroteToDisk=JNI_FALSE;
     lastidx=0;
@@ -1454,7 +1469,8 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
     distance2=-1;
     distance3=-1;
     xcorr_counter=0;
-
+    //cxt is for the speaker
+    //cxt2 is for the microphone
     if (round==round0) {
         cxt2 = calloc(1, sizeof(mycontext));
         cxt2->bigdata = calloc(bufferSize * 2 * totalRecorderLoops, sizeof(short));
@@ -1465,6 +1481,10 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
         memset(cxt2->bigdata,0,bufferSize * 2 * totalRecorderLoops * sizeof(short));
         memset(cxt2->data,0,bufferSize * totalRecorderLoops * sizeof(short));
     }
+    cxt2->ts_len=(recordTime*FS)/bufferSize;
+    cxt2->bigBufferSize=bigBufferSize;
+    cxt2->bigBufferTimes=bigBufferTimes;
+    cxt2->mic_ts = calloc((recordTime*FS)/bufferSize,sizeof(long));
     cxt2->initialDelay = initialDelay;
     cxt2->xcorrthresh=xcorrthresh;
     cxt2->naiserTx1=naiserTx1;
@@ -1482,7 +1502,6 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
     cxt2->bottomfilename = bottomfilename;
     cxt2->meta_filename = meta_filename;
     cxt2->mic_ts_fname=mic_ts_filename_str;
-    cxt2->speaker_ts_fname=speaker_ts_filename_str;
     cxt2->bufferSize=bufferSize;
     cxt2->queuedSegments=1;
     cxt2->initialOffset=initialOffset;

@@ -163,7 +163,7 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
                         Constants.minPeakDistance, Constants.fs, Constants.pre1, Constants.pre2, Constants.N0, Constants.CP,
                         Constants.naiserThresh, Constants.naiserShoulder, Constants.win_size, Constants.bias,
                         Constants.seekback, Constants.pthresh, 0, Constants.fileID, Constants.runxcorr, Constants.initialDelay,
-                        mic_ts_filename,speaker_ts_filename);
+                        mic_ts_filename,speaker_ts_filename,Constants.bigBufferSize,Constants.bigBufferTimes);
 
                 try {
 //                    int sleepTime = (int) (((double) Constants.bufferSize / Constants.fs) * 1000);
