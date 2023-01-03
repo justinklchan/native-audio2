@@ -225,7 +225,7 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
 //                                int[] indices = NativeAudio.getReplyIndexes();
 //                                int speakerSeg = Constants.bufferSize*(NativeAudio.getQueuedSpeakerSegments()-1);
                                 int cc = NativeAudio.getNumChirps();
-                                Log.e("debug5","num chirps "+cc);
+//                                Log.e("debug5","num chirps "+cc);
                                 (NativeAudio.av).runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {

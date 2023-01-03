@@ -551,12 +551,14 @@ int* xcorr(double* filteredData, double* refData, int filtLength, int refLength,
     int globalidx=maxidx+globalOffset;
 //    __android_log_print(ANDROID_LOG_VERBOSE, "debug","xcorr mindist %d %d %d %d %d %f",maxidx,globalOffset,globalidx,lastidx,
 //                        maxidx+globalOffset - lastidx,minPeakDistance);
-//    __android_log_print(ANDROID_LOG_VERBOSE, "debug","xcorr mindist %d %d %d %d %d",maxval > xcorrthresh,globalidx - lastidx > minPeakDistance*FS,lastidx==0,globalidx==lastidx,getOneMoreFlag);
+//    __android_log_print(ANDROID_LOG_VERBOSE, "debug6","mindist %d %d %d",globalidx,lastidx,(globalidx - lastidx));
 
+//    if (maxval > xcorrthresh && globalidx - lastidx > minPeakDistance*FS && (lastidx==0||globalidx==lastidx||getOneMoreFlag)) {
     if (maxval > xcorrthresh && (globalidx - lastidx > minPeakDistance*FS||lastidx==0||globalidx==lastidx||getOneMoreFlag)) {
         out[0] = maxidx;
         out[1] = maxval;
 //        lastidx=maxidx+globalOffset;
+//    __android_log_print(ANDROID_LOG_VERBOSE, "debug6","MINDIST");
         return out;
     }
     else {
@@ -1983,6 +1985,8 @@ int corr2(int N, int xcorr_idx, double* filteredData, mycontext* cxt2, int globa
     __android_log_print(ANDROID_LOG_VERBOSE, "debug2","corr2 %d %d %d",start_idx,end_idx,N);
     __android_log_print(ANDROID_LOG_VERBOSE, "debug", "***corr2 cindex %d %d %d",outidx,Nu,Ns2);
 //    if (xcorr_idx-win_size >= 0 && xcorr_idx+Ns2+win_size < N) {
+    __android_log_print(ANDROID_LOG_VERBOSE, "debug6", "naiser check %d %d %d %d",start_idx,end_idx,N,win_size);
+
     if (start_idx >= 0 && end_idx < N) {
         double* naiser_sig = calloc(Nrx,sizeof(double));
 
@@ -1996,6 +2000,8 @@ int corr2(int N, int xcorr_idx, double* filteredData, mycontext* cxt2, int globa
 
 //        int* result = xcorr(filtered, refData2, N, N_ref2, 0,
 //                            0, 4, 1.5, 960, .65,JNI_FALSE);
+
+        __android_log_print(ANDROID_LOG_VERBOSE, "debug6","start naiser");
         int naiser_idx = naiser_corr(naiser_sig, Nrx, Nu, N0, 8, !CP, cxt2->naiserThresh, cxt2->naiserShoulder);
 
         clock_t end = clock();

@@ -30,7 +30,8 @@ public class Constants {
     public static NestedScrollView sview;
     static int fs=44100;
     static float naiserThresh=0.45f, naiserShoulder=0.8f;
-    static int win_size=4800, bias=320;
+    static int win_size=0;
+    static int bias=320;
     static int initSleep=0;
     static float xcorrthresh=5f;
     public static float replyDelay = 3.0f;
@@ -120,7 +121,7 @@ public class Constants {
 
         float bufSizeInSamples = fs*bufSizeInSeconds;
         bufferSize=(int)Math.ceil(bufSizeInSamples/minbuffersize)*minbuffersize;
-        bufferSize+=(minbuffersize*3);
+//        bufferSize+=(minbuffersize*3);
 
         float bigBufferSizeInSamples = fs*bigBufferSizeInSeconds;
         bigBufferTimes=((int)Math.ceil(bigBufferSizeInSamples/bufferSize));
