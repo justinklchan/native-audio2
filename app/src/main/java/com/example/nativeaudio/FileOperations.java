@@ -49,6 +49,8 @@ public class FileOperations {
                         outfile.append(Constants.time_mag.get(i)+","+Constants.magx.get(i)+","+Constants.magy.get(i)+","+Constants.magz.get(i));
                         outfile.newLine();
                     }
+                    outfile.flush();
+                    outfile.close();
 
                     file = new File(dir, filename+"-pressure.txt");
                     outfile = new BufferedWriter(new FileWriter(file,false));
