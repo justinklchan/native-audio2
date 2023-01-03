@@ -69,3 +69,5 @@
 175	236	1672788018	/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/build/intermediates/cmake/debug/obj/arm64-v8a/libnative-audio-jni.so	91fe4aa07b471b26
 0	211	1672788115	CMakeFiles/native-audio-jni.dir/native-audio-jni.c.o	228251655e4a82d3
 211	279	1672788115	/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/build/intermediates/cmake/debug/obj/arm64-v8a/libnative-audio-jni.so	91fe4aa07b471b26
+1	310	1672788151	CMakeFiles/native-audio-jni.dir/native-audio-jni.c.o	228251655e4a82d3
+310	444	1672788151	/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/build/intermediates/cmake/debug/obj/arm64-v8a/libnative-audio-jni.so	91fe4aa07b471b26

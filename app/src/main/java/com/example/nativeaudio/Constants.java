@@ -29,11 +29,11 @@ public class Constants {
     static EditText et1,et2,et3,et4,et5,et6,et7,et8,et9,et10,et11,et12,et13,et14,et15;
     public static NestedScrollView sview;
     static int fs=44100;
-    static float naiserThresh=0.45f, naiserShoulder=0.8f;
+    static float naiserThresh=0.1f, naiserShoulder=0.8f;
     static int win_size=4800;
     static int bias=320;
     static int initSleep=0;
-    static float xcorrthresh=5f;
+    static float xcorrthresh=2f;
     public static float replyDelay = 3.0f;
 //    static int calibSigLen = 4800;
     static boolean water,reply,naiser=true,runxcorr=true;
