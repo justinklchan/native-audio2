@@ -30,7 +30,7 @@ public class Constants {
     public static NestedScrollView sview;
     static int fs=44100;
     static float naiserThresh=0.45f, naiserShoulder=0.8f;
-    static int win_size=0;
+    static int win_size=4800;
     static int bias=320;
     static int initSleep=0;
     static float xcorrthresh=5f;

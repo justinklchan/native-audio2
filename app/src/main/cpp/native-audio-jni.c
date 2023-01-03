@@ -1975,6 +1975,7 @@ int corr2(int N, int xcorr_idx, double* filteredData, mycontext* cxt2, int globa
     unsigned long int N0 = cxt2->N0;
     jboolean CP = cxt2->CP;
     jint win_size = cxt2->win_size;
+//    jint win_size = 0;
     jint bias = cxt2->bias;
 
 //    jint Nrx=Ns2+(win_size*2);
