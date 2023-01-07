@@ -25,7 +25,7 @@ public class FileOperations {
                         path.mkdirs();
                     }
 
-                    File file = new File(dir, filename+"-acc.txt");
+                    File file = new File(dir, filename+"/"+filename+"-acc.txt");
                     BufferedWriter outfile = new BufferedWriter(new FileWriter(file,false));
                     for (int i = 0; i < Constants.accx.size(); i++) {
                         outfile.append(Constants.time_acc.get(i)+","+Constants.accx.get(i)+","+Constants.accy.get(i)+","+Constants.accz.get(i));
@@ -34,7 +34,7 @@ public class FileOperations {
                     outfile.flush();
                     outfile.close();
 
-                    file = new File(dir, filename+"-gyro.txt");
+                    file = new File(dir, filename+"/"+filename+"-gyro.txt");
                     outfile = new BufferedWriter(new FileWriter(file,false));
                     for (int i = 0; i < Constants.gyrox.size(); i++) {
                         outfile.append(Constants.time_gyro.get(i)+","+Constants.gyrox.get(i)+","+Constants.gyroy.get(i)+","+Constants.gyroz.get(i));
@@ -43,7 +43,7 @@ public class FileOperations {
                     outfile.flush();
                     outfile.close();
 
-                    file = new File(dir, filename+"-mag.txt");
+                    file = new File(dir, filename+"/"+filename+"-mag.txt");
                     outfile = new BufferedWriter(new FileWriter(file,false));
                     for (int i = 0; i < Constants.magx.size(); i++) {
                         outfile.append(Constants.time_mag.get(i)+","+Constants.magx.get(i)+","+Constants.magy.get(i)+","+Constants.magz.get(i));
@@ -52,7 +52,7 @@ public class FileOperations {
                     outfile.flush();
                     outfile.close();
 
-                    file = new File(dir, filename+"-pressure.txt");
+                    file = new File(dir, filename+"/"+filename+"-pressure.txt");
                     outfile = new BufferedWriter(new FileWriter(file,false));
                     for (int i = 0; i < Constants.pressure_data.size(); i++) {
                         outfile.append(Constants.time_pressure.get(i)+","+Constants.pressure_data.get(i));

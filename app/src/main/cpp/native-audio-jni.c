@@ -53,10 +53,10 @@ static const char hello[] =
 static const char android[] =
 #include "android_clip.h"
 ;
-static long now_ms(void) {
+static double now_ms(void) {
     struct timespec res;
     clock_gettime(CLOCK_REALTIME, &res);
-    return (long)(1000.0 * res.tv_sec + (double) res.tv_nsec / 1e6);
+    return (1000.0 * res.tv_sec + (double) res.tv_nsec / 1e6);
 }
 
 // engine interfaces
@@ -124,8 +124,8 @@ typedef struct mycontext{
     int filenum;
     int dataSize;
     float initialDelay;
-    long* mic_ts;
-    long* speaker_ts;
+    double* mic_ts;
+    double* speaker_ts;
     int ts_len;
     char* speaker_ts_fname;
     char* mic_ts_fname;
@@ -352,7 +352,7 @@ void static bqPlayerCallback(SLAndroidSimpleBufferQueueItf bq, void *context)
         FILE* fp = fopen(cxt->speaker_ts_fname,"w+");
         fp = fopen(cxt->speaker_ts_fname,"w+");
         for (int i = 0; i < cxt->ts_len-1; i++) {
-            fprintf(fp,"%d\n",cxt->speaker_ts[i]);
+            fprintf(fp,"%f\n",cxt->speaker_ts[i]);
         }
         fclose(fp);
         free(cxt->speaker_ts);
@@ -940,7 +940,7 @@ void bqRecorderCallback(SLAndroidSimpleBufferQueueItf bq, void *context)
         FILE* fp = fopen(cxt->mic_ts_fname,"w+");
         fp = fopen(cxt->mic_ts_fname,"w+");
         for (int i = 0; i < cxt->ts_len-1; i++) {
-            fprintf(fp,"%d\n",cxt->mic_ts[i]);
+            fprintf(fp,"%f\n",cxt->mic_ts[i]);
         }
         fclose(fp);
         free(cxt->mic_ts);
@@ -1463,7 +1463,7 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
     cxt->responder=reply;
     char* speaker_ts_filename_str = (*env)->GetStringUTFChars(env, speaker_ts_fname, NULL);
     cxt->speaker_ts_fname=speaker_ts_filename_str;
-    cxt->speaker_ts = calloc((recordTime*FS)/bufferSize,sizeof(long));
+    cxt->speaker_ts = calloc((recordTime*FS)/bufferSize,sizeof(double));
     cxt->ts_len=(recordTime*FS)/bufferSize;
 
     __android_log_print(ANDROID_LOG_VERBOSE, "debug", "populate cxt");
@@ -1503,7 +1503,7 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
     cxt2->ts_len=(recordTime*FS)/bufferSize;
     cxt2->bigBufferSize=bigBufferSize;
     cxt2->bigBufferTimes=bigBufferTimes;
-    cxt2->mic_ts = calloc((recordTime*FS)/bufferSize,sizeof(long));
+    cxt2->mic_ts = calloc((recordTime*FS)/bufferSize,sizeof(double));
     cxt2->initialDelay = initialDelay;
     cxt2->xcorrthresh=xcorrthresh;
     cxt2->naiserTx1=naiserTx1;

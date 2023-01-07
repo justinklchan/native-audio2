@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.util.Log;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class MyTask extends AsyncTask<Void, Void, Void> {
@@ -77,6 +78,11 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
 
         Constants.tt = System.currentTimeMillis();
         String t2 = Constants.tt+"";
+
+        String dir = av.getExternalFilesDir(null).toString();
+        File path = new File(dir+"/"+t2);
+        path.mkdir();
+
         Constants.debugPane.setText("");
         Constants.tv.setText(t2.substring(t2.length()-4,t2.length()));
         Constants.toggleUI();
@@ -142,11 +148,11 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
 //                }
 //            }
 
-            String topfilename = dir + "/" + Constants.tt + "-top.txt";
-            String bottomfilename = dir + "/" + Constants.tt + "-bottom.txt";
-            String meta_filename = dir + "/" + Constants.tt + "-meta.txt";
-            String mic_ts_filename = dir + "/" + Constants.tt + "-mic_ts.txt";
-            String speaker_ts_filename = dir + "/" + Constants.tt + "-speaker_ts.txt";
+            String topfilename = dir  + "/"+Constants.tt + "/" + Constants.tt + "-top.txt";
+            String bottomfilename = dir  + "/"+Constants.tt+ "/" + Constants.tt + "-bottom.txt";
+            String meta_filename = dir  + "/"+Constants.tt+ "/" + Constants.tt + "-meta.txt";
+            String mic_ts_filename = dir  + "/"+Constants.tt+ "/" + Constants.tt + "-mic_ts.txt";
+            String speaker_ts_filename = dir  + "/"+Constants.tt+ "/" + Constants.tt + "-speaker_ts.txt";
 
             int initialOffset = begin_gap + warmup_len + gap_len;
             if (!Constants.stop) {
