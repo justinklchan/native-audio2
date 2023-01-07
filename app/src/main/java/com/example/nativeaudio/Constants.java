@@ -120,13 +120,13 @@ public class Constants {
         }
 
         float bufSizeInSamples = fs*bufSizeInSeconds;
-        bufferSize=(int)Math.ceil(bufSizeInSamples/minbuffersize)*minbuffersize;
+        bufferSize=((int)Math.ceil(bufSizeInSamples/minbuffersize))*minbuffersize;
 //        bufferSize+=(minbuffersize*3);
 
         float bigBufferSizeInSamples = fs*bigBufferSizeInSeconds;
         bigBufferTimes=((int)Math.ceil(bigBufferSizeInSamples/bufferSize));
         bigBufferSize = bigBufferTimes*bufferSize;
-
+        Log.e("asdf","BUFFER "+minbuffersize+","+bufferSize+","+bigBufferSize);
         loadData(cxt);
     }
 
