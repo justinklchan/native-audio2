@@ -34,10 +34,28 @@ public class FileOperations {
                     outfile.flush();
                     outfile.close();
 
+                    file = new File(dir, filename+"/"+filename+"-acc-uncalib.txt");
+                    outfile = new BufferedWriter(new FileWriter(file,false));
+                    for (int i = 0; i < Constants.accx_uncalib.size(); i++) {
+                        outfile.append(Constants.time_acc_uncalib.get(i)+","+Constants.accx_uncalib.get(i)+","+Constants.accy_uncalib.get(i)+","+Constants.accz_uncalib.get(i));
+                        outfile.newLine();
+                    }
+                    outfile.flush();
+                    outfile.close();
+
                     file = new File(dir, filename+"/"+filename+"-gyro.txt");
                     outfile = new BufferedWriter(new FileWriter(file,false));
                     for (int i = 0; i < Constants.gyrox.size(); i++) {
                         outfile.append(Constants.time_gyro.get(i)+","+Constants.gyrox.get(i)+","+Constants.gyroy.get(i)+","+Constants.gyroz.get(i));
+                        outfile.newLine();
+                    }
+                    outfile.flush();
+                    outfile.close();
+
+                    file = new File(dir, filename+"/"+filename+"-gyro-uncalib.txt");
+                    outfile = new BufferedWriter(new FileWriter(file,false));
+                    for (int i = 0; i < Constants.gyrox_uncalib.size(); i++) {
+                        outfile.append(Constants.time_gyro_uncalib.get(i)+","+Constants.gyrox_uncalib.get(i)+","+Constants.gyroy_uncalib.get(i)+","+Constants.gyroz_uncalib.get(i));
                         outfile.newLine();
                     }
                     outfile.flush();

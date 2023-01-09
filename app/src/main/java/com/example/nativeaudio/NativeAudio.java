@@ -76,7 +76,7 @@ public class NativeAudio extends AppCompatActivity
     static boolean isPlayingUri = false;
 
     private static SensorManager sensorManager;
-    private Sensor accelerometer,gyroscope,magnetometer,pressure;
+    private Sensor accelerometer,accelerometer_uncalib,gyroscope,gyroscope_uncalib,magnetometer,pressure;
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -126,8 +126,10 @@ public class NativeAudio extends AppCompatActivity
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
-        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        accelerometer_uncalib = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER_UNCALIBRATED);
         gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        gyroscope_uncalib = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED);
         magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         pressure = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
@@ -690,11 +692,23 @@ public class NativeAudio extends AppCompatActivity
             Constants.accz.add(event.values[2]);
 //            Log.e("imu",event.values[0]+","+event.values[1]+","+event.values[2]);
         }
+        else if (event.sensor.equals(accelerometer_uncalib)&&Constants.recordImu) {
+            Constants.time_acc_uncalib.add(System.currentTimeMillis());
+            Constants.accx_uncalib.add(event.values[0]);
+            Constants.accy_uncalib.add(event.values[1]);
+            Constants.accz_uncalib.add(event.values[2]);
+        }
         else if (event.sensor.equals(gyroscope)&&Constants.recordImu) {
             Constants.time_gyro.add(System.currentTimeMillis());
             Constants.gyrox.add(event.values[0]);
             Constants.gyroy.add(event.values[1]);
             Constants.gyroz.add(event.values[2]);
+        }
+        else if (event.sensor.equals(gyroscope_uncalib)&&Constants.recordImu) {
+            Constants.time_gyro_uncalib.add(System.currentTimeMillis());
+            Constants.gyrox_uncalib.add(event.values[0]);
+            Constants.gyroy_uncalib.add(event.values[1]);
+            Constants.gyroz_uncalib.add(event.values[2]);
         }
         else if (event.sensor.equals(magnetometer)&&Constants.recordImu) {
             Constants.time_mag.add(System.currentTimeMillis());

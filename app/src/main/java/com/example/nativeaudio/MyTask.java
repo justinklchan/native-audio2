@@ -62,6 +62,8 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
 
         Constants.time_acc=new ArrayList<>();
         Constants.time_gyro=new ArrayList<>();
+        Constants.time_acc_uncalib=new ArrayList<>();
+        Constants.time_gyro_uncalib=new ArrayList<>();
         Constants.time_mag=new ArrayList<>();
         Constants.time_pressure=new ArrayList<>();
         Constants.accx=new ArrayList<>();
@@ -70,6 +72,12 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
         Constants.gyrox=new ArrayList<>();
         Constants.gyroy=new ArrayList<>();
         Constants.gyroz=new ArrayList<>();
+        Constants.accx_uncalib=new ArrayList<>();
+        Constants.accy_uncalib=new ArrayList<>();
+        Constants.accz_uncalib=new ArrayList<>();
+        Constants.gyrox_uncalib=new ArrayList<>();
+        Constants.gyroy_uncalib=new ArrayList<>();
+        Constants.gyroz_uncalib=new ArrayList<>();
         Constants.magx=new ArrayList<>();
         Constants.magy=new ArrayList<>();
         Constants.magz=new ArrayList<>();

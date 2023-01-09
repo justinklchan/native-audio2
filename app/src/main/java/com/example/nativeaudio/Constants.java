@@ -57,9 +57,11 @@ public class Constants {
     static float bigBufferSizeInSeconds = .5f;
     static ConstraintLayout clayout;
 
-    static ArrayList<Long> time_acc,time_gyro,time_mag,time_pressure;
+    static ArrayList<Long> time_acc,time_gyro,time_acc_uncalib,time_gyro_uncalib,time_mag,time_pressure;
     static ArrayList<Float> accx,accy,accz;
     static ArrayList<Float> gyrox,gyroy,gyroz;
+    static ArrayList<Float> accx_uncalib,accy_uncalib,accz_uncalib;
+    static ArrayList<Float> gyrox_uncalib,gyroy_uncalib,gyroz_uncalib;
     static ArrayList<Float> magx,magy,magz;
     static ArrayList<Float> pressure_data;
     static boolean recordImu=false;
