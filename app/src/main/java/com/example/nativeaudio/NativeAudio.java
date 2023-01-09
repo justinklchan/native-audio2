@@ -76,7 +76,7 @@ public class NativeAudio extends AppCompatActivity
     static boolean isPlayingUri = false;
 
     private static SensorManager sensorManager;
-    private Sensor accelerometer,accelerometer_uncalib,gyroscope,gyroscope_uncalib,magnetometer,pressure;
+    private Sensor accelerometer,accelerometer_uncalib,gyroscope,gyroscope_uncalib,magnetometer,magnetometer_uncalib,pressure;
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -131,12 +131,14 @@ public class NativeAudio extends AppCompatActivity
         gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         gyroscope_uncalib = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED);
         magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        magnetometer_uncalib = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD_UNCALIBRATED);
         pressure = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
         sensorManager.registerListener(this, accelerometer_uncalib, SensorManager.SENSOR_DELAY_FASTEST);
         sensorManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_FASTEST);
         sensorManager.registerListener(this, gyroscope_uncalib, SensorManager.SENSOR_DELAY_FASTEST);
         sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this, magnetometer_uncalib, SensorManager.SENSOR_DELAY_FASTEST);
         sensorManager.registerListener(this, pressure, SensorManager.SENSOR_DELAY_FASTEST);
 
 //        NativeAudio.init();
@@ -688,7 +690,7 @@ public class NativeAudio extends AppCompatActivity
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.equals(accelerometer)&&Constants.recordImu) {
-            Log.e("sensor","calib");
+//            Log.e("sensor","calib");
             Constants.time_acc.add(System.currentTimeMillis());
             Constants.accx.add(event.values[0]);
             Constants.accy.add(event.values[1]);
@@ -696,7 +698,7 @@ public class NativeAudio extends AppCompatActivity
 //            Log.e("imu",event.values[0]+","+event.values[1]+","+event.values[2]);
         }
         else if (event.sensor.equals(accelerometer_uncalib)&&Constants.recordImu) {
-            Log.e("sensor","uncalib");
+//            Log.e("sensor","uncalib");
             Constants.time_acc_uncalib.add(System.currentTimeMillis());
             Constants.accx_uncalib.add(event.values[0]);
             Constants.accy_uncalib.add(event.values[1]);
@@ -719,6 +721,12 @@ public class NativeAudio extends AppCompatActivity
             Constants.magx.add(event.values[0]);
             Constants.magy.add(event.values[1]);
             Constants.magz.add(event.values[2]);
+        }
+        else if (event.sensor.equals(magnetometer_uncalib)&&Constants.recordImu) {
+            Constants.time_mag_uncalib.add(System.currentTimeMillis());
+            Constants.magx_uncalib.add(event.values[0]);
+            Constants.magy_uncalib.add(event.values[1]);
+            Constants.magz_uncalib.add(event.values[2]);
         }
         else if (event.sensor.equals(pressure)&&Constants.recordImu) {
             Constants.time_pressure.add(System.currentTimeMillis());

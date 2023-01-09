@@ -70,6 +70,15 @@ public class FileOperations {
                     outfile.flush();
                     outfile.close();
 
+                    file = new File(dir, filename+"/"+filename+"-mag-uncalib.txt");
+                    outfile = new BufferedWriter(new FileWriter(file,false));
+                    for (int i = 0; i < Constants.magx_uncalib.size(); i++) {
+                        outfile.append(Constants.time_mag_uncalib.get(i)+","+Constants.magx_uncalib.get(i)+","+Constants.magy_uncalib.get(i)+","+Constants.magz_uncalib.get(i));
+                        outfile.newLine();
+                    }
+                    outfile.flush();
+                    outfile.close();
+
                     file = new File(dir, filename+"/"+filename+"-pressure.txt");
                     outfile = new BufferedWriter(new FileWriter(file,false));
                     for (int i = 0; i < Constants.pressure_data.size(); i++) {
