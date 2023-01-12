@@ -1420,7 +1420,9 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
         memcpy(cxt->refData,refData, N_ref*sizeof(short));
 
         // copy at beginning
-//        memcpy(cxt->data,data,N*sizeof(short));
+        if (responder) {
+            memcpy(cxt->data, refData, N_ref * sizeof(short));
+        }
 
         // copy N seconds later
 //        if (!runxcorr && responder) {
@@ -1442,7 +1444,7 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
 //            }
 //        }
         if (!runxcorr && !responder){
-            for (int index = tempSendDelay; index < bufferSize * totalSpeakerLoops; index += tempSendDelay) {
+            for (int index = 0; index < bufferSize * totalSpeakerLoops; index += tempSendDelay) {
                 __android_log_print(ANDROID_LOG_VERBOSE, "debug", "FILLING %d %d",index, bufferSize * totalSpeakerLoops);
                 for (int i = 0; i < N_ref; i++) {
                     cxt->data[index+i] = refData[i];
