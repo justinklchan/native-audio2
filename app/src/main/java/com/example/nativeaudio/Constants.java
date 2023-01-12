@@ -57,13 +57,15 @@ public class Constants {
     static float bigBufferSizeInSeconds = .5f;
     static ConstraintLayout clayout;
 
-    static ArrayList<Long> time_acc,time_gyro,time_acc_uncalib,time_gyro_uncalib,time_mag,time_mag_uncalib,time_pressure;
+    static ArrayList<Long> time_acc,time_gyro,time_acc_uncalib,time_gyro_uncalib,time_mag,time_mag_uncalib,time_pressure,time_linear_acc,time_rot;
     static ArrayList<Float> accx,accy,accz;
     static ArrayList<Float> gyrox,gyroy,gyroz;
     static ArrayList<Float> accx_uncalib,accy_uncalib,accz_uncalib;
     static ArrayList<Float> gyrox_uncalib,gyroy_uncalib,gyroz_uncalib;
     static ArrayList<Float> magx,magy,magz;
     static ArrayList<Float> magx_uncalib,magy_uncalib,magz_uncalib;
+    static ArrayList<Float> linearaccx,linearaccy,linearaccz;
+    static ArrayList<Float> rotx,roty,rotz;
     static ArrayList<Float> pressure_data;
     static boolean recordImu=false;
     static long tt;
@@ -283,7 +285,7 @@ public class Constants {
             sig=FileOperations.readrawasset_binary(cxt, R.raw.signal_2160_480_1000_5000);
             pre1=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n2160_480_1000_5000_t1));
             pre2=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n2160_480_1000_5000_t2));
-            txt="n1260_480_1000_5000";
+            txt="n2160_480_1000_5000";
             N0=480;
             CP=false;
         }
@@ -291,7 +293,7 @@ public class Constants {
             sig=FileOperations.readrawasset_binary(cxt, R.raw.signal_2160_480_1000_9000);
             pre1=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n2160_480_1000_9000_t1));
             pre2=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n2160_480_1000_9000_t2));
-            txt="n1260_480_1000_9000";
+            txt="n2160_480_1000_9000";
             N0=480;
             CP=false;
         }

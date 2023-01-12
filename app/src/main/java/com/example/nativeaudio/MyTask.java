@@ -86,6 +86,14 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
         Constants.magy_uncalib=new ArrayList<>();
         Constants.magz_uncalib=new ArrayList<>();
         Constants.pressure_data=new ArrayList<>();
+        Constants.time_rot=new ArrayList<>();
+        Constants.rotx=new ArrayList<>();
+        Constants.roty=new ArrayList<>();
+        Constants.rotz=new ArrayList<>();
+        Constants.time_linear_acc=new ArrayList<>();
+        Constants.linearaccx=new ArrayList<>();
+        Constants.linearaccy=new ArrayList<>();
+        Constants.linearaccz=new ArrayList<>();
         Constants.recordImu=true;
 
         Constants.tt = System.currentTimeMillis();

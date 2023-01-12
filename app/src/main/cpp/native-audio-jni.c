@@ -1420,7 +1420,7 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
         memcpy(cxt->refData,refData, N_ref*sizeof(short));
 
         // copy at beginning
-        memcpy(cxt->data,data, N*sizeof(short));
+//        memcpy(cxt->data,data,N*sizeof(short));
 
         // copy N seconds later
 //        if (!runxcorr && responder) {
@@ -1442,7 +1442,7 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
 //            }
 //        }
         if (!runxcorr && !responder){
-            for (int index = 0; index < bufferSize * totalSpeakerLoops; index += tempSendDelay) {
+            for (int index = tempSendDelay; index < bufferSize * totalSpeakerLoops; index += tempSendDelay) {
                 __android_log_print(ANDROID_LOG_VERBOSE, "debug", "FILLING %d %d",index, bufferSize * totalSpeakerLoops);
                 for (int i = 0; i < N_ref; i++) {
                     cxt->data[index+i] = refData[i];
@@ -2031,8 +2031,6 @@ int corr2(int N, int xcorr_idx, double* filteredData, mycontext* cxt2, int globa
             double* h = calloc(Ntx1,sizeof(double));
 
             double* h_sig = calloc(Ns2,sizeof(double));
-//            memcpy(h_sig,&naiser_sig[naiser_idx+1-bias],Ns2*sizeof(double));
-//            memcpy(h_sig,&naiser_sig[win_size - bias +1],Ns2*sizeof(double));
             memcpy(h_sig,&filteredData[start_idx2],Ns2*sizeof(double));
 //            char* str5=getString_d(h,Ntx1);
 
