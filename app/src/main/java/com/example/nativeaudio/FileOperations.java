@@ -100,7 +100,7 @@ public class FileOperations {
                     file = new File(dir, filename+"/"+filename+"-rot.txt");
                     outfile = new BufferedWriter(new FileWriter(file,false));
                     for (int i = 0; i < Constants.rotx.size(); i++) {
-                        outfile.append(Constants.time_rot.get(i)+","+Constants.rotx.get(i)+","+Constants.roty.get(i)+","+Constants.rotz.get(i));
+                        outfile.append(Constants.time_rot.get(i)+","+Constants.rotx.get(i)+","+Constants.roty.get(i)+","+Constants.rotz.get(i)+","+Constants.rot4.get(i));
                         outfile.newLine();
                     }
                     outfile.flush();

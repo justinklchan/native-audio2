@@ -699,7 +699,7 @@ public class NativeAudio extends AppCompatActivity
             Constants.accx.add(event.values[0]);
             Constants.accy.add(event.values[1]);
             Constants.accz.add(event.values[2]);
-            Log.e("imu",((int)event.values[0])+","+((int)event.values[1])+","+((int)event.values[2]));
+//            Log.e("imu",((int)event.values[0])+","+((int)event.values[1])+","+((int)event.values[2]));
         }
         else if (event.sensor.equals(accelerometer_uncalib)&&Constants.recordImu) {
 //            Log.e("sensor","uncalib");
@@ -747,6 +747,7 @@ public class NativeAudio extends AppCompatActivity
             Constants.rotx.add(event.values[0]);
             Constants.roty.add(event.values[1]);
             Constants.rotz.add(event.values[2]);
+            Constants.rotz.add(event.values[3]);
         }
     }
 

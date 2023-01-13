@@ -329,6 +329,7 @@ void static bqPlayerCallback(SLAndroidSimpleBufferQueueItf bq, void *context)
 
     SLresult result;
     if (cxt->queuedSegments<cxt->totalSegments) {
+//        __android_log_print(ANDROID_LOG_VERBOSE,"debug5","%d %d",cxt->playOffset,replyIdx1);
         result = (*bqPlayerBufferQueue)->Enqueue(bqPlayerBufferQueue, cxt->data+cxt->playOffset, cxt->bufferSize*sizeof(short));
         assert(SL_RESULT_SUCCESS == result);
 
@@ -642,15 +643,18 @@ void setReply(int idx, mycontext* cxt) {
     // don't trigger on the calibration chirp
 //    __android_log_print(ANDROID_LOG_VERBOSE,"debug2","set reply start %d %d",idx,replyIdx1);
 //    if (cxt->sendReply&&cxt->responder && idx > FS && idx-replyIdx1 > FS) {
-    if (cxt->responder && idx > FS && idx-replyIdx1 > FS) {
+    if (cxt->responder && idx > FS && idx-replyIdx1 >= FS) {
 //    if (cxt->responder) {
         receivedIdx = idx;
 //        replyIdx1 = idx + cxt->initialDelay*FS;
-        replyIdx1 = idx - cxt->timingOffset + cxt->sendDelay;
+//        replyIdx1 = idx - cxt->timingOffset + cxt->sendDelay;
+        replyIdx1 = idx + cxt->sendDelay;
 //        replyIdx2 = replyIdx1 + cxt->sendDelay;
 //        replyIdx3 = replyIdx2 + cxt->sendDelay;
 //        if (replyIdx3 < cxt->dataSize-cxt->preamble_len-cxt->bufferSize &&
 //            self_chirp_idx != -1 && idx != self_chirp_idx) {
+        __android_log_print(ANDROID_LOG_VERBOSE,"debug5","replyidx %d %d %d %d %d",replyIdx1,cxt->dataSize-cxt->preamble_len-cxt->bufferSize,
+                            cxt->dataSize,cxt->preamble_len,cxt->bufferSize);
         if (replyIdx1 < cxt->dataSize-cxt->preamble_len-cxt->bufferSize) {
 //            __android_log_print(ANDROID_LOG_VERBOSE, "debug", "send index %d %d %d %d %f",
 //                                idx, cxt->timingOffset, cxt->sendDelay, replyIdx1,
@@ -1420,9 +1424,9 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
         memcpy(cxt->refData,refData, N_ref*sizeof(short));
 
         // copy at beginning
-        if (responder) {
-            memcpy(cxt->data, refData, N_ref * sizeof(short));
-        }
+//        if (responder) {
+//            memcpy(cxt->data, refData, N_ref * sizeof(short));
+//        }
 
         // copy N seconds later
 //        if (!runxcorr && responder) {

@@ -54,7 +54,7 @@ public class Constants {
     static int rounds = 1;
     static float initialDelay = 3f;
     static float bufSizeInSeconds=.01f;
-    static float bigBufferSizeInSeconds = .5f;
+    static float bigBufferSizeInSeconds = .3f;
     static ConstraintLayout clayout;
 
     static ArrayList<Long> time_acc,time_gyro,time_acc_uncalib,time_gyro_uncalib,time_mag,time_mag_uncalib,time_pressure,time_linear_acc,time_rot;
@@ -65,7 +65,7 @@ public class Constants {
     static ArrayList<Float> magx,magy,magz;
     static ArrayList<Float> magx_uncalib,magy_uncalib,magz_uncalib;
     static ArrayList<Float> linearaccx,linearaccy,linearaccz;
-    static ArrayList<Float> rotx,roty,rotz;
+    static ArrayList<Float> rotx,roty,rotz,rot4;
     static ArrayList<Float> pressure_data;
     static boolean recordImu=false;
     static long tt;

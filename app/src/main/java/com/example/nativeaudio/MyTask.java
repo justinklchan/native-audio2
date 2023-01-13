@@ -90,6 +90,7 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
         Constants.rotx=new ArrayList<>();
         Constants.roty=new ArrayList<>();
         Constants.rotz=new ArrayList<>();
+        Constants.rot4=new ArrayList<>();
         Constants.time_linear_acc=new ArrayList<>();
         Constants.linearaccx=new ArrayList<>();
         Constants.linearaccy=new ArrayList<>();
