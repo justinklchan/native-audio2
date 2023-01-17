@@ -35,6 +35,7 @@ import android.os.Build;
 import android.os.Bundle;
 //import android.support.annotation.NonNull;
 //import android.support.v4.app.ActivityCompat;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -54,6 +55,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.widget.NestedScrollView;
+
+import java.util.Date;
 
 public class NativeAudio extends AppCompatActivity
         implements ActivityCompat.OnRequestPermissionsResultCallback,
@@ -135,15 +138,6 @@ public class NativeAudio extends AppCompatActivity
         pressure = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
         linear_acc = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         rotation_vec = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
-        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
-//        sensorManager.registerListener(this, accelerometer_uncalib, SensorManager.SENSOR_DELAY_FASTEST);
-        sensorManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_FASTEST);
-//        sensorManager.registerListener(this, gyroscope_uncalib, SensorManager.SENSOR_DELAY_FASTEST);
-        sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_FASTEST);
-        sensorManager.registerListener(this, magnetometer_uncalib, SensorManager.SENSOR_DELAY_FASTEST);
-        sensorManager.registerListener(this, pressure, SensorManager.SENSOR_DELAY_FASTEST);
-        sensorManager.registerListener(this, linear_acc, SensorManager.SENSOR_DELAY_FASTEST);
-        sensorManager.registerListener(this, rotation_vec, SensorManager.SENSOR_DELAY_FASTEST);
 
 //        NativeAudio.init();
         Constants.et1 = (EditText)findViewById(R.id.editTextNumberDecimal);
@@ -506,6 +500,7 @@ public class NativeAudio extends AppCompatActivity
         Constants.recButton.setOnClickListener(new OnClickListener() {
             public void onClick(View view) {
                 Constants.stop=false;
+                register_sensors();
                 int status = ActivityCompat.checkSelfPermission(NativeAudio.this,
                         Manifest.permission.RECORD_AUDIO);
                 if (status != PackageManager.PERMISSION_GRANTED) {
@@ -523,6 +518,7 @@ public class NativeAudio extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Constants.recordImu=false;
+                deregister_sensors();
                 forcewrite();
                 FileOperations.writeSensorsToDisk(NativeAudio.this,Constants.tt+"");
                 try {
@@ -665,8 +661,7 @@ public class NativeAudio extends AppCompatActivity
     public static native void reset();
     public static native void forcewrite();
     public static native void shutdown();
-
-//    public static native boolean recAndPlay(int count, double[] data, String dd, int rec_len);
+    public static native long nowms2();
     public static native void calibrate(short[] data, short[] refData, int bufferSize, int recordTime,
                                         String topfilename, String bottomfilename,
                                         String meta_filename, int initialOffset, int warmdown_len, int preamble_len,
@@ -691,59 +686,76 @@ public class NativeAudio extends AppCompatActivity
         System.loadLibrary("native-audio-jni");
     }
 
+    public void register_sensors() {
+//        int speed = SensorManager.SENSOR_DELAY_FASTEST;
+        int speed = SensorManager.SENSOR_DELAY_NORMAL;
+        sensorManager.registerListener(this, accelerometer, speed);
+//        sensorManager.registerListener(this, accelerometer_uncalib, speed);
+        sensorManager.registerListener(this, gyroscope, speed);
+//        sensorManager.registerListener(this, gyroscope_uncalib, speed);
+        sensorManager.registerListener(this, magnetometer, speed);
+        sensorManager.registerListener(this, magnetometer_uncalib, speed);
+        sensorManager.registerListener(this, pressure, speed);
+        sensorManager.registerListener(this, linear_acc, speed);
+        sensorManager.registerListener(this, rotation_vec, speed);
+    }
+
+    public void deregister_sensors() {
+        sensorManager.unregisterListener(this);
+    }
+
     @Override
     public void onSensorChanged(SensorEvent event) {
+//        long timeInMillis = event.timestamp;
+        long timeInMillis=NativeAudio.nowms2();
         if (event.sensor.equals(accelerometer)&&Constants.recordImu) {
-//            Log.e("sensor","calib");
-            Constants.time_acc.add(event.timestamp);
+            Constants.time_acc.add(timeInMillis);
             Constants.accx.add(event.values[0]);
             Constants.accy.add(event.values[1]);
             Constants.accz.add(event.values[2]);
-//            Log.e("imu",((int)event.values[0])+","+((int)event.values[1])+","+((int)event.values[2]));
         }
         else if (event.sensor.equals(accelerometer_uncalib)&&Constants.recordImu) {
-//            Log.e("sensor","uncalib");
-            Constants.time_acc_uncalib.add(event.timestamp);
+            Constants.time_acc_uncalib.add(timeInMillis);
             Constants.accx_uncalib.add(event.values[0]);
             Constants.accy_uncalib.add(event.values[1]);
             Constants.accz_uncalib.add(event.values[2]);
         }
         else if (event.sensor.equals(gyroscope)&&Constants.recordImu) {
-            Constants.time_gyro.add(event.timestamp);
+            Constants.time_gyro.add(timeInMillis);
             Constants.gyrox.add(event.values[0]);
             Constants.gyroy.add(event.values[1]);
             Constants.gyroz.add(event.values[2]);
         }
         else if (event.sensor.equals(gyroscope_uncalib)&&Constants.recordImu) {
-            Constants.time_gyro_uncalib.add(event.timestamp);
+            Constants.time_gyro_uncalib.add(timeInMillis);
             Constants.gyrox_uncalib.add(event.values[0]);
             Constants.gyroy_uncalib.add(event.values[1]);
             Constants.gyroz_uncalib.add(event.values[2]);
         }
         else if (event.sensor.equals(magnetometer)&&Constants.recordImu) {
-            Constants.time_mag.add(event.timestamp);
+            Constants.time_mag.add(timeInMillis);
             Constants.magx.add(event.values[0]);
             Constants.magy.add(event.values[1]);
             Constants.magz.add(event.values[2]);
         }
         else if (event.sensor.equals(magnetometer_uncalib)&&Constants.recordImu) {
-            Constants.time_mag_uncalib.add(event.timestamp);
+            Constants.time_mag_uncalib.add(timeInMillis);
             Constants.magx_uncalib.add(event.values[0]);
             Constants.magy_uncalib.add(event.values[1]);
             Constants.magz_uncalib.add(event.values[2]);
         }
         else if (event.sensor.equals(pressure)&&Constants.recordImu) {
-            Constants.time_pressure.add(event.timestamp);
+            Constants.time_pressure.add(timeInMillis);
             Constants.pressure_data.add(event.values[0]);
         }
         else if (event.sensor.equals(linear_acc)&&Constants.recordImu) {
-            Constants.time_linear_acc.add(event.timestamp);
+            Constants.time_linear_acc.add(timeInMillis);
             Constants.linearaccx.add(event.values[0]);
             Constants.linearaccy.add(event.values[1]);
             Constants.linearaccz.add(event.values[2]);
         }
         else if (event.sensor.equals(rotation_vec)&&Constants.recordImu) {
-            Constants.time_rot.add(event.timestamp);
+            Constants.time_rot.add(timeInMillis);
             Constants.rotx.add(event.values[0]);
             Constants.roty.add(event.values[1]);
             Constants.rotz.add(event.values[2]);

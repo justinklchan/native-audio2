@@ -169,11 +169,11 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
 //                }
 //            }
 
-            String topfilename = dir  + "/"+Constants.tt + "/" + Constants.tt + "-top.txt";
-            String bottomfilename = dir  + "/"+Constants.tt+ "/" + Constants.tt + "-bottom.txt";
-            String meta_filename = dir  + "/"+Constants.tt+ "/" + Constants.tt + "-meta.txt";
-            String mic_ts_filename = dir  + "/"+Constants.tt+ "/" + Constants.tt + "-mic_ts.txt";
-            String speaker_ts_filename = dir  + "/"+Constants.tt+ "/" + Constants.tt + "-speaker_ts.txt";
+            String topfilename = dir  + "/"+Constants.tt + "/" + Constants.tt + "-" + Constants.fileID + "-top.txt";
+            String bottomfilename = dir  + "/"+Constants.tt+ "/" + Constants.tt + "-" + Constants.fileID + "-bottom.txt";
+            String meta_filename = dir  + "/"+Constants.tt+ "/" + Constants.tt + "-" + Constants.fileID + "-meta.txt";
+            String mic_ts_filename = dir  + "/"+Constants.tt+ "/" + Constants.tt + "-" + Constants.fileID + "-mic_ts.txt";
+            String speaker_ts_filename = dir  + "/"+Constants.tt+ "/" + Constants.tt + "-" + Constants.fileID + "-speaker_ts.txt";
 
             int initialOffset = begin_gap + warmup_len + gap_len;
             if (!Constants.stop) {

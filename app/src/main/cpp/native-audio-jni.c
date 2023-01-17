@@ -28,7 +28,7 @@
 #include <string.h>
 #include <pthread.h>
 #include <fftw3.h>
-
+#include <inttypes.h>
 
 // for __android_log_print(ANDROID_LOG_INFO, "YourApp", "formatted message");
 // #include <android/log.h>
@@ -53,10 +53,18 @@ static const char hello[] =
 static const char android[] =
 #include "android_clip.h"
 ;
-static double now_ms(void) {
-    struct timespec res;
-    clock_gettime(CLOCK_REALTIME, &res);
-    return (1000.0 * res.tv_sec + (double) res.tv_nsec / 1e6);
+
+static int64_t now_ms(void) {
+    struct timespec now;
+    clock_gettime(CLOCK_REALTIME, &now);
+    return (now.tv_sec*1000000000LL + now.tv_nsec);
+}
+
+JNIEXPORT int64_t JNICALL
+Java_com_example_nativeaudio_NativeAudio_nowms2(JNIEnv *env, jclass clazz) {
+    struct timespec now;
+    clock_gettime(CLOCK_REALTIME, &now);
+    return (now.tv_sec*1000000000LL + now.tv_nsec);
 }
 
 // engine interfaces
@@ -124,13 +132,15 @@ typedef struct mycontext{
     int filenum;
     int dataSize;
     float initialDelay;
-    double* mic_ts;
-    double* speaker_ts;
+    int64_t* mic_ts;
+    int64_t* speaker_ts;
     int ts_len;
     char* speaker_ts_fname;
     char* mic_ts_fname;
     int bigBufferSize;
     int bigBufferTimes;
+    JNIEnv *env;
+    jclass clazz;
 }mycontext;
 
 jboolean wroteToDisk=JNI_FALSE;
@@ -353,7 +363,9 @@ void static bqPlayerCallback(SLAndroidSimpleBufferQueueItf bq, void *context)
         FILE* fp = fopen(cxt->speaker_ts_fname,"w+");
         fp = fopen(cxt->speaker_ts_fname,"w+");
         for (int i = 0; i < cxt->ts_len-1; i++) {
-            fprintf(fp,"%f\n",cxt->speaker_ts[i]);
+//            fprintf(fp,"%f\n",cxt->speaker_ts[i]);
+//            fprintf(fp,"%d\n",cxt->speaker_ts[i]);
+            fprintf(fp, "%" PRId64 "\n", cxt->speaker_ts[i]);
         }
         fclose(fp);
         free(cxt->speaker_ts);
@@ -937,14 +949,13 @@ void bqRecorderCallback(SLAndroidSimpleBufferQueueItf bq, void *context)
     jboolean c3 = !cxt->responder&&cxt->queuedSegments==cxt->totalSegments;
     jboolean c5 = (cxt->responder&&cxt->queuedSegments==cxt->totalSegments);
     if ((c1 || c2 || c3 || c5) && !wroteToDisk) {
-//        __android_log_print(ANDROID_LOG_VERBOSE, "debug2", "write to mic disk %s %d",cxt->mic_ts_fname,cxt->ts_len);
-
         // write to disk
         wroteToDisk=JNI_TRUE;
         FILE* fp = fopen(cxt->mic_ts_fname,"w+");
         fp = fopen(cxt->mic_ts_fname,"w+");
         for (int i = 0; i < cxt->ts_len-1; i++) {
-            fprintf(fp,"%f\n",cxt->mic_ts[i]);
+//            fprintf(fp,"%f\n",cxt->mic_ts[i]);
+            fprintf(fp, "%" PRId64 "\n", cxt->mic_ts[i]);
         }
         fclose(fp);
         free(cxt->mic_ts);
@@ -1471,6 +1482,8 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
     cxt->speaker_ts_fname=speaker_ts_filename_str;
     cxt->speaker_ts = calloc((recordTime*FS)/bufferSize,sizeof(double));
     cxt->ts_len=(recordTime*FS)/bufferSize;
+    cxt->env = env;
+    cxt->clazz = clazz;
 
     __android_log_print(ANDROID_LOG_VERBOSE, "debug", "populate cxt");
 
@@ -1506,6 +1519,8 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
         memset(cxt2->bigdata,0,bufferSize * 2 * totalRecorderLoops * sizeof(short));
         memset(cxt2->data,0,bufferSize * totalRecorderLoops * sizeof(short));
     }
+    cxt2->env = env;
+    cxt2->clazz = clazz;
     cxt2->ts_len=(recordTime*FS)/bufferSize;
     cxt2->bigBufferSize=bigBufferSize;
     cxt2->bigBufferTimes=bigBufferTimes;

@@ -126,12 +126,13 @@ public class Constants {
 
         float bufSizeInSamples = fs*bufSizeInSeconds;
         bufferSize=((int)Math.ceil(bufSizeInSamples/minbuffersize))*minbuffersize;
-//        bufferSize+=(minbuffersize*3);
+        bufferSize *= 10;
 
         float bigBufferSizeInSamples = fs*bigBufferSizeInSeconds;
         bigBufferTimes=((int)Math.ceil(bigBufferSizeInSamples/bufferSize));
         bigBufferSize = bigBufferTimes*bufferSize;
         Log.e("asdf","BUFFER "+minbuffersize+","+bufferSize+","+bigBufferSize);
+
         loadData(cxt);
     }
 
@@ -294,6 +295,30 @@ public class Constants {
             pre1=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n2160_480_1000_9000_t1));
             pre2=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n2160_480_1000_9000_t2));
             txt="n2160_480_1000_9000";
+            N0=480;
+            CP=false;
+        }
+        else if (Constants.fileID==17) {
+            sig=FileOperations.readrawasset_binary(cxt, R.raw.chirp_1000_5000);
+            pre1=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.chirp_1000_5000));
+            pre2=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.chirp_1000_5000));
+            txt="chirp_1000_5000";
+            N0=480;
+            CP=false;
+        }
+        else if (Constants.fileID==18) {
+            sig=FileOperations.readrawasset_binary(cxt, R.raw.chirp_1000_10000);
+            pre1=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.chirp_1000_10000));
+            pre2=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.chirp_1000_10000));
+            txt="chirp_1000_10000";
+            N0=480;
+            CP=false;
+        }
+        else if (Constants.fileID==19) {
+            sig=FileOperations.readrawasset_binary(cxt, R.raw.chirp_1000_15000);
+            pre1=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.chirp_1000_15000));
+            pre2=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.chirp_1000_15000));
+            txt="chirp_1000_15000";
             N0=480;
             CP=false;
         }
