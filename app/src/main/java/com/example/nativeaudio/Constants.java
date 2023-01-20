@@ -114,9 +114,6 @@ public class Constants {
         sw3.setChecked(naiser);
         sw4.setChecked(runxcorr);
 
-        AudioManager am = (AudioManager) cxt.getSystemService(Context.AUDIO_SERVICE);
-        minbuffersize=Integer.parseInt(am.getProperty(AudioManager.PROPERTY_OUTPUT_FRAMES_PER_BUFFER));
-
         if (sw1.isChecked()) {
             Constants.sw1.setText("Water");
         }
@@ -124,10 +121,15 @@ public class Constants {
             Constants.sw1.setText("Air");
         }
 
+        AudioManager am = (AudioManager) cxt.getSystemService(Context.AUDIO_SERVICE);
+        minbuffersize=Integer.parseInt(am.getProperty(AudioManager.PROPERTY_OUTPUT_FRAMES_PER_BUFFER));
+
+        // buffersize is how often the speaker/microphone callback is invoked
         float bufSizeInSamples = fs*bufSizeInSeconds;
         bufferSize=((int)Math.ceil(bufSizeInSamples/minbuffersize))*minbuffersize;
         bufferSize *= 10;
 
+        // big buffer size is the buffer size used for xcorr processing
         float bigBufferSizeInSamples = fs*bigBufferSizeInSeconds;
         bigBufferTimes=((int)Math.ceil(bigBufferSizeInSamples/bufferSize));
         bigBufferSize = bigBufferTimes*bufferSize;

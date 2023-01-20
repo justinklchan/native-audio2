@@ -680,6 +680,7 @@ void setReply(int idx, mycontext* cxt) {
     }
 }
 
+// this method is called to record the microphone/speaker delay from the calibration signal
 jboolean timeOffsetUpdated=JNI_FALSE;
 void updateTimingOffset(int global_xcorr_idx, int local_chirp_idx, mycontext* cxt) {
 //    __android_log_print(ANDROID_LOG_VERBOSE,"debug2","update timing offset");
@@ -695,6 +696,7 @@ void updateTimingOffset(int global_xcorr_idx, int local_chirp_idx, mycontext* cx
     timeOffsetUpdated=JNI_TRUE;
 }
 
+// this is the main method used to do xcorr processing
 void* xcorr_thread(void* context) {
     mycontext* cxt = (mycontext*)context;
 //    __android_log_print(ANDROID_LOG_VERBOSE, "hello", "thread created");
