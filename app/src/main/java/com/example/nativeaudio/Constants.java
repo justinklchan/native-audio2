@@ -53,8 +53,8 @@ public class Constants {
     static float pthresh=.65f;
     static int rounds = 1;
     static float initialDelay = 3f;
-    static float bufSizeInSeconds=.01f;
-    static float bigBufferSizeInSeconds = .3f;
+    static float bufSizeInSeconds=.25f;
+    static float bigBufferSizeInSeconds = .25f;
     static ConstraintLayout clayout;
 
     static ArrayList<Long> time_acc,time_gyro,time_acc_uncalib,time_gyro_uncalib,time_mag,time_mag_uncalib,time_pressure,time_linear_acc,time_rot;
@@ -127,7 +127,7 @@ public class Constants {
         // buffersize is how often the speaker/microphone callback is invoked
         float bufSizeInSamples = fs*bufSizeInSeconds;
         bufferSize=((int)Math.ceil(bufSizeInSamples/minbuffersize))*minbuffersize;
-        bufferSize *= 10;
+//        bufferSize *= 10;
 
         // big buffer size is the buffer size used for xcorr processing
         float bigBufferSizeInSamples = fs*bigBufferSizeInSeconds;
@@ -301,27 +301,19 @@ public class Constants {
             CP=false;
         }
         else if (Constants.fileID==17) {
-            sig=FileOperations.readrawasset_binary(cxt, R.raw.chirp_1000_5000);
-            pre1=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.chirp_1000_5000));
-            pre2=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.chirp_1000_5000));
-            txt="chirp_1000_5000";
-            N0=480;
+            sig=FileOperations.readrawasset_binary(cxt, R.raw.signal_840_360_1000_5000);
+            pre1=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n840_360_1000_5000_t1));
+            pre2=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n840_360_1000_5000_t2));
+            txt="n840_360_1000_5000";
+            N0=360;
             CP=false;
         }
-        else if (Constants.fileID==18) {
-            sig=FileOperations.readrawasset_binary(cxt, R.raw.chirp_1000_10000);
-            pre1=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.chirp_1000_10000));
-            pre2=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.chirp_1000_10000));
-            txt="chirp_1000_10000";
-            N0=480;
-            CP=false;
-        }
-        else if (Constants.fileID==19) {
-            sig=FileOperations.readrawasset_binary(cxt, R.raw.chirp_1000_15000);
-            pre1=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.chirp_1000_15000));
-            pre2=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.chirp_1000_15000));
-            txt="chirp_1000_15000";
-            N0=480;
+        else  {
+            sig=FileOperations.readrawasset_binary(cxt, R.raw.signal_840_360_1000_5000);
+            pre1=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n840_360_1000_5000_t1));
+            pre2=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n840_360_1000_5000_t2));
+            txt="n840_360_1000_5000";
+            N0=360;
             CP=false;
         }
 
