@@ -53,8 +53,8 @@ public class Constants {
     static float pthresh=.65f;
     static int rounds = 1;
     static float initialDelay = 3f;
-    static float bufSizeInSeconds=.25f;
-    static float bigBufferSizeInSeconds = .25f;
+    static float bufSizeInSeconds=.2f;
+    static float bigBufferSizeInSeconds = .2f;
     static ConstraintLayout clayout;
 
     static ArrayList<Long> time_acc,time_gyro,time_acc_uncalib,time_gyro_uncalib,time_mag,time_mag_uncalib,time_pressure,time_linear_acc,time_rot;
@@ -69,6 +69,7 @@ public class Constants {
     static ArrayList<Float> pressure_data;
     static boolean recordImu=false;
     static long tt;
+    static int numsym=8;
 
     public static void init(Context cxt) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(cxt);
@@ -308,13 +309,17 @@ public class Constants {
             N0=360;
             CP=false;
         }
-        else  {
-            sig=FileOperations.readrawasset_binary(cxt, R.raw.signal_840_360_1000_5000);
-            pre1=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n840_360_1000_5000_t1));
-            pre2=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n840_360_1000_5000_t2));
-            txt="n840_360_1000_5000";
+        else if (Constants.fileID==18) {
+            sig=FileOperations.readrawasset_binary(cxt, R.raw.signal7_960_360_1000_5000);
+            pre1=new double[960];
+            pre2=new double[sig.length];
+            for (int i = 0; i < pre2.length; i++) {
+                pre2[i]=sig[i];
+            }
+            txt="N_seq7_960-360-1000-5000";
             N0=360;
             CP=false;
+            numsym=7;
         }
 
         if (Utils.max(pre1) > 2) {

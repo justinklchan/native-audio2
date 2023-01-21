@@ -142,6 +142,7 @@ typedef struct mycontext{
     int bigBufferTimes;
     JNIEnv *env;
     jclass clazz;
+    int numSyms;
 }mycontext;
 
 jboolean wroteToDisk=JNI_FALSE;
@@ -1396,7 +1397,7 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
                                                    jint N0, jboolean CP, jfloat naiserThresh, jfloat naiserShoulder,
                                                    jint win_size, jint bias, jint seekback, jdouble pthresh, int round,
                                                    int filenum, jboolean runxcorr, jfloat initialDelay, jstring mic_ts_fname,
-                                                   jstring speaker_ts_fname, int bigBufferSize,int bigBufferTimes) {
+                                                   jstring speaker_ts_fname, int bigBufferSize,int bigBufferTimes,int numSym) {
     freed=JNI_FALSE;
     timeOffsetUpdated=JNI_FALSE;
     int round0 = 0;
@@ -1535,6 +1536,7 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
         memset(cxt2->bigdata,0,bufferSize * 2 * totalRecorderLoops * sizeof(short));
         memset(cxt2->data,0,bufferSize * totalRecorderLoops * sizeof(short));
     }
+    cxt2->numSyms=numSym;
     cxt2->env = env;
     cxt2->clazz = clazz;
     cxt2->ts_len=(recordTime*FS)/bufferSize;
@@ -1750,13 +1752,13 @@ int find_max(double* in, unsigned long int len_in){
 // DIVIDE_FACTOR = 2
 // include_zero=false (false for cp version, true for guard interval version)
 // threshold=.6
-int naiser_corr(double* signal, int total_length , int Nu, int N0, int DIVIDE_FACTOR, jboolean include_zero, double threshold, double nshoulder){
+int naiser_corr(double* signal, int total_length , int Nu, int N0, int DIVIDE_FACTOR, jboolean include_zero, double threshold, double nshoulder, int numSym){
 //    __android_log_print(ANDROID_LOG_VERBOSE, "debug2", "naiser corr %d",total_length);
 
     short PN_seq[8] = {1, -1, -1, -1, -1, -1, 1, -1};
 
     int N_both = Nu + N0;
-    int preamble_L = 8*N_both;
+    int preamble_L = numSym*N_both;
 
     if(total_length-preamble_L < 0){
 //        cout << "input signal too short" << endl;
@@ -1774,7 +1776,7 @@ int naiser_corr(double* signal, int total_length , int Nu, int N0, int DIVIDE_FA
         //cout << i << ' ' << total_length - preamble_L - 1 << ' '  << len_corr  << endl;
 //        __android_log_print(ANDROID_LOG_VERBOSE, "debug", "it %d/%d",i,total_length - preamble_L - 1);
         double Pd = 0;
-        for(int k = 0; k < 8 - 1; ++k){
+        for(int k = 0; k < numSym - 1; ++k){
 //            __android_log_print(ANDROID_LOG_VERBOSE, "debug", "it2 %d",k);
             int bk = PN_seq[k]*PN_seq[k+1];
             double temp_P = multiptle_sum(signal + i, k*N_both + N0, (k + 1)*N_both,
@@ -1786,7 +1788,7 @@ int naiser_corr(double* signal, int total_length , int Nu, int N0, int DIVIDE_FA
 //            Rd = (sum_sqr(signal + i, 0, preamble_L)*Nu)/N_both;
 //        }
 //        else{
-            for(int k = 0; k < 8; ++k){
+            for(int k = 0; k < numSym; ++k){
                 Rd += sum_sqr(signal + i, k*N_both + N0, (k + 1)*N_both);
             }
 //        }
@@ -1855,16 +1857,16 @@ int naiser_corr(double* signal, int total_length , int Nu, int N0, int DIVIDE_FA
 
 // result, tx -> channel length = Ns
 // rx -> recv_len = 8*(Ns+N0)
-void channel_estimation_freq_multiple(double* result, double * tx, unsigned long int Ns, double * rx, unsigned long int recv_len, unsigned long int N0, int BW1, int BW2, int fs){
+void channel_estimation_freq_multiple(double* result, double * tx, unsigned long int Ns, double * rx, unsigned long int recv_len, unsigned long int N0, int BW1, int BW2, int fs, int numSym){
 //    __android_log_print(ANDROID_LOG_VERBOSE, "debug", "channel estimation %d %d %d",recv_len,Ns,N0);
 
-    assert(  recv_len == 8*(Ns+N0) );
+    assert(  recv_len == numSym*(Ns+N0) );
     short PN_seq[8] = {1, -1, -1, -1, -1, -1, 1, -1};
 
     fftw_complex *H_avg =(fftw_complex*)fftw_malloc(Ns*sizeof(fftw_complex));
     if(H_avg==NULL){fprintf(stderr,"malloc failed\n");exit(1);}
 
-    for(int i = 0; i<8; ++i){
+    for(int i = 0; i<numSym; ++i){
         fftw_complex *H_result =(fftw_complex*)fftw_malloc(Ns*sizeof(fftw_complex));
         if(H_result==NULL){fprintf(stderr,"malloc failed\n");exit(1);}
 
@@ -1886,8 +1888,8 @@ void channel_estimation_freq_multiple(double* result, double * tx, unsigned long
     }
 
     for(unsigned long int j = 0; j < Ns; ++j ){
-        H_avg[j][0] /= (8*Ns); //H_result[j][0];
-        H_avg[j][1] /= (8*Ns); //H_result[j][1];
+        H_avg[j][0] /= (numSym*Ns); //H_result[j][0];
+        H_avg[j][1] /= (numSym*Ns); //H_result[j][1];
     }
 
     fftw_complex *h=(fftw_complex*)fftw_malloc(Ns*sizeof(fftw_complex));
@@ -1939,7 +1941,7 @@ Java_com_example_nativeaudio_NativeAudio_naiserCorrTest(JNIEnv *env, jclass claz
 
     __android_log_print(ANDROID_LOG_VERBOSE, "debug", "N %d",Nrx);
 
-    int naiser_idx=naiser_corr(signal2, Nrx, 720, 480, 2, JNI_FALSE, .5, .8);
+    int naiser_idx=naiser_corr(signal2, Nrx, 720, 480, 2, JNI_FALSE, .5, .8,8);
     __android_log_print(ANDROID_LOG_VERBOSE, "debug", "***naiser index %d",naiser_idx);
 
     double* signal3 = calloc(Ntx2,sizeof(double));
@@ -1952,7 +1954,7 @@ Java_com_example_nativeaudio_NativeAudio_naiserCorrTest(JNIEnv *env, jclass claz
 
     __android_log_print(ANDROID_LOG_VERBOSE, "debug", "start h");
 
-    channel_estimation_freq_multiple(h, pre1, Ntx, signal3, Ntx2, N0,  BW1,  BW2,  FS);
+    channel_estimation_freq_multiple(h, pre1, Ntx, signal3, Ntx2, N0,  BW1,  BW2,  FS, 8);
 
     __android_log_print(ANDROID_LOG_VERBOSE, "debug", "end h");
 
@@ -2039,7 +2041,7 @@ int corr2(int N, int xcorr_idx, double* filteredData, mycontext* cxt2, int globa
 //                            0, 4, 1.5, 960, .65,JNI_FALSE);
 
 //        __android_log_print(ANDROID_LOG_VERBOSE, "debug6","start naiser");
-        int naiser_idx = naiser_corr(naiser_sig, Nrx, Nu, N0, 8, !CP, cxt2->naiserThresh, cxt2->naiserShoulder);
+        int naiser_idx = naiser_corr(naiser_sig, Nrx, Nu, N0, 8, !CP, cxt2->naiserThresh, cxt2->naiserShoulder,cxt2->numSyms);
 
         clock_t end = clock();
         double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
@@ -2080,7 +2082,7 @@ int corr2(int N, int xcorr_idx, double* filteredData, mycontext* cxt2, int globa
 
             channel_estimation_freq_multiple(h, cxt2->naiserTx1, Ntx1,
                                              h_sig, Ntx2,
-                                             N0,  BW1,  BW2,  FS);
+                                             N0,  BW1,  BW2,  FS, cxt2->numSyms);
             int h_idx=findhpeak(h,Ntx1,cxt2->bias);
 
             end = clock();
@@ -2122,9 +2124,9 @@ int* xcorr_helper2(void* context, short* data, int globalOffset, int N) {
     N -= filt_offset;
 
     clock_t begin = clock();
-//        char* str1=getString_s(data,N);
-//        char* str3=getString_d(filteredData,N);
-//        char* str4=getString_d(refData,N_ref);
+//    char* str1=getString_s(data,N);
+//    char* str3=getString_d(filteredData,N);
+//    char* str4=getString_d(refData,N_ref);
 
     int* xcorr_out = xcorr(filteredData2, refData, N, N_ref, cxt->queuedSegments,
                    globalOffset, cxt->xcorrthresh, cxt->minPeakDistance, cxt->seekback,
@@ -2228,7 +2230,7 @@ Java_com_example_nativeaudio_NativeAudio_testxcorr(JNIEnv *env, jclass clazz,jdo
         memcpy(signal2, &filtered[start_idx], Nrx * sizeof(double));
 
         char *nstr = getString_d(signal2, Nrx);
-        int naiser_idx = naiser_corr(signal2, Nrx, Nu, N0, 8, !CP, .45, .8);
+        int naiser_idx = naiser_corr(signal2, Nrx, Nu, N0, 8, !CP, .45, .8,8);
         __android_log_print(ANDROID_LOG_VERBOSE, "debug", "naiser %d", naiser_idx);
 
         if (naiser_idx >= 0) {
@@ -2248,7 +2250,7 @@ Java_com_example_nativeaudio_NativeAudio_testxcorr(JNIEnv *env, jclass clazz,jdo
 
                 channel_estimation_freq_multiple(h, refData1, Nu,
                                                  h_sig, Ntx2,
-                                                 N0, 1000, 5000, 44100);
+                                                 N0, 1000, 5000, 44100, 8);
                 //    char* out2 = getString_d(h, 720);
 
                 int h_idx = findhpeak(h, Nu, bias);

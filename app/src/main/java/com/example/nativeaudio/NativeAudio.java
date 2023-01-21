@@ -669,7 +669,7 @@ public class NativeAudio extends AppCompatActivity
                                         boolean reply, boolean naiser, int sendDelay,float xcorrthresh, float minPeakDistance,
                                         int fs, double[] naiserTx1, double[] naiserTx2, int N0, boolean CP, float naiserThresh, float naiserShoulder,
                                         int win_size, int bias, int seekback, double pthresh, int round, int filenum, boolean runxcorr, float initialDelay,
-                                        String mic_ts_fname, String speaker_ts_fname,int bigBufferSize,int bigBufferTimes);
+                                        String mic_ts_fname, String speaker_ts_fname,int bigBufferSize,int bigBufferTimes, int numSym);
     public static native void testxcorr(double[] data, double[] refData, double[] refData2, int N0, boolean CP);
     public static native double[] getDistance(boolean reply);
     public static native double[] getVal();
