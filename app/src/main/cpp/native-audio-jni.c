@@ -670,8 +670,8 @@ void setReply(int idx, mycontext* cxt) {
 //        __android_log_print(ANDROID_LOG_VERBOSE,"debug6","replyidx %d %d %d %d %d",
 //                            replyIdx1,cxt->dataSize-cxt->preamble_len-cxt->bufferSize,
 //                            cxt->dataSize,cxt->preamble_len,cxt->bufferSize);
-        __android_log_print(ANDROID_LOG_VERBOSE,"speaker","replyidx %d",
-                            replyIdx1);
+        __android_log_print(ANDROID_LOG_VERBOSE,"speaker","replyidx %d %d",
+                            replyIdx1,idx);
         if (replyIdx1 < cxt->dataSize-cxt->preamble_len-cxt->bufferSize) {
 //            __android_log_print(ANDROID_LOG_VERBOSE, "debug", "send index %d %d %d %d %f",
 //                                idx, cxt->timingOffset, cxt->sendDelay, replyIdx1,
@@ -2043,7 +2043,7 @@ int corr2(int N, int xcorr_idx, double* filteredData, mycontext* cxt2, int globa
 
         clock_t end = clock();
         double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-//        __android_log_print(ANDROID_LOG_VERBOSE, "time2", "%.4f", time_spent);
+        __android_log_print(ANDROID_LOG_VERBOSE, "time2", "%.4f", time_spent);
 
 //        __android_log_print(ANDROID_LOG_VERBOSE, "debug", "***nindex %d",naiser_idx);
         if (naiser_idx>0) {
@@ -2085,7 +2085,7 @@ int corr2(int N, int xcorr_idx, double* filteredData, mycontext* cxt2, int globa
 
             end = clock();
             time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-//            __android_log_print(ANDROID_LOG_VERBOSE, "time3", "%.4f", time_spent);
+            __android_log_print(ANDROID_LOG_VERBOSE, "time3", "%.4f", time_spent);
 
             free(h);
             free(h_sig);
@@ -2136,7 +2136,7 @@ int* xcorr_helper2(void* context, short* data, int globalOffset, int N) {
 
     double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 
-//    __android_log_print(ANDROID_LOG_VERBOSE, "time1", "%.4f", time_spent);
+    __android_log_print(ANDROID_LOG_VERBOSE, "time1", "%.4f", time_spent);
 
     if (xcorr_out[0]<0) {
 //        __android_log_print(ANDROID_LOG_VERBOSE, "debug", "***xcorr output neg %d", xcorr_out[0]);
