@@ -1447,7 +1447,7 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
         cxt->refData=calloc(N_ref, sizeof(short));
         memcpy(cxt->refData,refData, N_ref*sizeof(short));
 
-        // copy at beginning
+        // copy at beginningaaa
         if (responder) {
             int counter=0;
             for (int i = initialCalibrationDelay*FS; i < (initialCalibrationDelay*FS) + N_ref; i++) {

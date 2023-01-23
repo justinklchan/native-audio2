@@ -35,7 +35,7 @@ public class Constants {
     static int initSleep=0;
     static float xcorrthresh=2f;
     public static float replyDelay = 3.0f;
-//    static int calibSigLen = 4800;
+//    static int calibSigLen = 4800;;
     static boolean water,reply,naiser=true,runxcorr=true;
     static float vol=0.01f, minPeakDistance=1.5f;
     static int fileID=0;
