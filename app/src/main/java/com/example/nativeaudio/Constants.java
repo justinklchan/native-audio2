@@ -316,7 +316,7 @@ public class Constants {
             for (int i = 0; i < pre2.length; i++) {
                 pre2[i]=sig[i];
             }
-            txt="N_seq7_960-360-1000-5000";
+            txt=" N_seq7_960-360-1000-5000";
             N0=360;
             CP=false;
             numsym=7;
