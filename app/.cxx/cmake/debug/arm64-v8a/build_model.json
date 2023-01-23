@@ -6,12 +6,12 @@
     "deprecated": false,
     "default": true
   },
-  "originalCxxBuildFolder": "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/.cxx/cmake/debug/arm64-v8a",
-  "cxxBuildFolder": "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/.cxx/cmake/debug/arm64-v8a",
+  "originalCxxBuildFolder": "D:\\ctc\\Github\\native-audio2\\app\\.cxx\\cmake\\debug\\arm64-v8a",
+  "cxxBuildFolder": "D:\\ctc\\Github\\native-audio2\\app\\.cxx\\cmake\\debug\\arm64-v8a",
   "abiPlatformVersion": 23,
   "cmake": {
-    "cmakeWrappingBaseFolder": "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/.cxx/cxx/debug/arm64-v8a",
-    "cmakeArtifactsBaseFolder": "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/.cxx/cmake/debug/arm64-v8a",
+    "cmakeWrappingBaseFolder": "D:\\ctc\\Github\\native-audio2\\app\\.cxx\\cxx\\debug\\arm64-v8a",
+    "cmakeArtifactsBaseFolder": "D:\\ctc\\Github\\native-audio2\\app\\.cxx\\cmake\\debug\\arm64-v8a",
     "effectiveConfiguration": {
       "name": "traditional-android-studio-cmake-environment",
       "description": "Composite reified CMakeSettings configuration",
@@ -19,13 +19,13 @@
       "inheritEnvironments": [
         "ndk"
       ],
-      "buildRoot": "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/.cxx/cmake/debug/arm64-v8a",
-      "cmakeToolchain": "/root/Android/Sdk/ndk/22.1.7171670/build/cmake/android.toolchain.cmake",
-      "cmakeExecutable": "/root/Android/Sdk/cmake/3.18.1/bin/cmake",
+      "buildRoot": "D:\\ctc\\Github\\native-audio2\\app\\.cxx\\cmake\\debug\\arm64-v8a",
+      "cmakeToolchain": "C:\\Users\\Ali\\AppData\\Local\\Android\\Sdk\\ndk\\22.1.7171670\\build\\cmake\\android.toolchain.cmake",
+      "cmakeExecutable": "C:\\Program Files\\CMake\\bin\\cmake.exe",
       "variables": [
         {
           "name": "CMAKE_FIND_ROOT_PATH",
-          "value": "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/.cxx/cmake/debug/prefab/arm64-v8a/prefab"
+          "value": "D:\\ctc\\Github\\native-audio2\\app\\.cxx\\cmake\\debug\\prefab\\arm64-v8a\\prefab"
         },
         {
           "name": "CMAKE_BUILD_TYPE",
@@ -33,7 +33,7 @@
         },
         {
           "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "/root/Android/Sdk/ndk/22.1.7171670/build/cmake/android.toolchain.cmake"
+          "value": "C:\\Users\\Ali\\AppData\\Local\\Android\\Sdk\\ndk\\22.1.7171670\\build\\cmake\\android.toolchain.cmake"
         },
         {
           "name": "ANDROID_ABI",
@@ -41,7 +41,7 @@
         },
         {
           "name": "ANDROID_NDK",
-          "value": "/root/Android/Sdk/ndk/22.1.7171670"
+          "value": "C:\\Users\\Ali\\AppData\\Local\\Android\\Sdk\\ndk\\22.1.7171670"
         },
         {
           "name": "ANDROID_PLATFORM",
@@ -53,7 +53,7 @@
         },
         {
           "name": "CMAKE_ANDROID_NDK",
-          "value": "/root/Android/Sdk/ndk/22.1.7171670"
+          "value": "C:\\Users\\Ali\\AppData\\Local\\Android\\Sdk\\ndk\\22.1.7171670"
         },
         {
           "name": "CMAKE_EXPORT_COMPILE_COMMANDS",
@@ -61,15 +61,11 @@
         },
         {
           "name": "CMAKE_LIBRARY_OUTPUT_DIRECTORY",
-          "value": "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/build/intermediates/cmake/debug/obj/arm64-v8a"
+          "value": "D:\\ctc\\Github\\native-audio2\\app\\build\\intermediates\\cmake\\debug\\obj\\arm64-v8a"
         },
         {
           "name": "CMAKE_RUNTIME_OUTPUT_DIRECTORY",
-          "value": "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/build/intermediates/cmake/debug/obj/arm64-v8a"
-        },
-        {
-          "name": "CMAKE_MAKE_PROGRAM",
-          "value": "/root/Android/Sdk/cmake/3.18.1/bin/ninja"
+          "value": "D:\\ctc\\Github\\native-audio2\\app\\build\\intermediates\\cmake\\debug\\obj\\arm64-v8a"
         },
         {
           "name": "CMAKE_SYSTEM_NAME",
@@ -81,32 +77,35 @@
         }
       ]
     },
-    "cmakeServerLogFile": "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/.cxx/cmake/debug/arm64-v8a/cmake_server_log.txt"
+    "cmakeServerLogFile": "D:\\ctc\\Github\\native-audio2\\app\\.cxx\\cmake\\debug\\arm64-v8a\\cmake_server_log.txt"
   },
   "variant": {
     "buildSystemArgumentList": [],
     "cFlagsList": [],
     "cppFlagsList": [],
     "variantName": "debug",
-    "objFolder": "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/build/intermediates/cmake/debug/obj",
-    "soFolder": "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/build/intermediates/cmake/debug/lib",
+    "objFolder": "D:\\ctc\\Github\\native-audio2\\app\\build\\intermediates\\cmake\\debug\\obj",
+    "soFolder": "D:\\ctc\\Github\\native-audio2\\app\\build\\intermediates\\cmake\\debug\\lib",
     "isDebuggableEnabled": true,
     "validAbiList": [
-      "ARM64_V8A"
+      "ARMEABI_V7A",
+      "ARM64_V8A",
+      "X86",
+      "X86_64"
     ],
     "buildTargetSet": [],
     "implicitBuildTargetSet": [],
     "cmakeSettingsConfiguration": "android-gradle-plugin-predetermined-name",
     "module": {
-      "cxxFolder": "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/.cxx",
+      "cxxFolder": "D:\\ctc\\Github\\native-audio2\\app\\.cxx",
       "splitsAbiFilterSet": [],
-      "intermediatesFolder": "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/build/intermediates",
+      "intermediatesFolder": "D:\\ctc\\Github\\native-audio2\\app\\build\\intermediates",
       "gradleModulePathName": ":app",
-      "moduleRootFolder": "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app",
-      "moduleBuildFile": "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/build.gradle",
-      "makeFile": "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/CMakeLists.txt",
+      "moduleRootFolder": "D:\\ctc\\Github\\native-audio2\\app",
+      "moduleBuildFile": "D:\\ctc\\Github\\native-audio2\\app\\build.gradle",
+      "makeFile": "D:\\ctc\\Github\\native-audio2\\app\\src\\main\\cpp\\CMakeLists.txt",
       "buildSystem": "CMAKE",
-      "ndkFolder": "/root/Android/Sdk/ndk/22.1.7171670",
+      "ndkFolder": "C:\\Users\\Ali\\AppData\\Local\\Android\\Sdk\\ndk\\22.1.7171670",
       "ndkVersion": "22.1.7171670",
       "ndkSupportedAbiList": [
         "ARMEABI_V7A",
@@ -169,44 +168,42 @@
           "default": true
         }
       ],
-      "originalCmakeToolchainFile": "/root/Android/Sdk/ndk/22.1.7171670/build/cmake/android.toolchain.cmake",
-      "cmakeToolchainFile": "/root/Android/Sdk/ndk/22.1.7171670/build/cmake/android.toolchain.cmake",
+      "originalCmakeToolchainFile": "C:\\Users\\Ali\\AppData\\Local\\Android\\Sdk\\ndk\\22.1.7171670\\build\\cmake\\android.toolchain.cmake",
+      "cmakeToolchainFile": "C:\\Users\\Ali\\AppData\\Local\\Android\\Sdk\\ndk\\22.1.7171670\\build\\cmake\\android.toolchain.cmake",
       "cmake": {
         "isValidCmakeAvailable": true,
-        "cmakeExe": "/root/Android/Sdk/cmake/3.18.1/bin/cmake",
-        "minimumCmakeVersion": "3.18.1",
-        "ninjaExe": "/root/Android/Sdk/cmake/3.18.1/bin/ninja",
+        "cmakeExe": "C:\\Program Files\\CMake\\bin\\cmake.exe",
+        "minimumCmakeVersion": "3.23.2",
         "isPreferCmakeFileApiEnabled": true
       },
       "stlSharedObjectMap": {
         "LIBCXX_SHARED": {
-          "ARMEABI_V7A": "/root/Android/Sdk/ndk/22.1.7171670/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/libc++_shared.so",
-          "ARM64_V8A": "/root/Android/Sdk/ndk/22.1.7171670/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/aarch64-linux-android/libc++_shared.so",
-          "X86": "/root/Android/Sdk/ndk/22.1.7171670/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/i686-linux-android/libc++_shared.so",
-          "X86_64": "/root/Android/Sdk/ndk/22.1.7171670/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/x86_64-linux-android/libc++_shared.so"
+          "ARMEABI_V7A": "C:\\Users\\Ali\\AppData\\Local\\Android\\Sdk\\ndk\\22.1.7171670\\toolchains\\llvm\\prebuilt\\windows-x86_64\\sysroot\\usr\\lib\\arm-linux-androideabi\\libc++_shared.so",
+          "ARM64_V8A": "C:\\Users\\Ali\\AppData\\Local\\Android\\Sdk\\ndk\\22.1.7171670\\toolchains\\llvm\\prebuilt\\windows-x86_64\\sysroot\\usr\\lib\\aarch64-linux-android\\libc++_shared.so",
+          "X86": "C:\\Users\\Ali\\AppData\\Local\\Android\\Sdk\\ndk\\22.1.7171670\\toolchains\\llvm\\prebuilt\\windows-x86_64\\sysroot\\usr\\lib\\i686-linux-android\\libc++_shared.so",
+          "X86_64": "C:\\Users\\Ali\\AppData\\Local\\Android\\Sdk\\ndk\\22.1.7171670\\toolchains\\llvm\\prebuilt\\windows-x86_64\\sysroot\\usr\\lib\\x86_64-linux-android\\libc++_shared.so"
         },
         "LIBCXX_STATIC": {},
         "NONE": {},
         "SYSTEM": {}
       },
       "project": {
-        "rootBuildGradleFolder": "/home/justin/Downloads/lowlatencyaudio-main/native-audio",
-        "cxxFolder": "/home/justin/Downloads/lowlatencyaudio-main/native-audio/.cxx",
-        "compilerSettingsCacheFolder": "/home/justin/Downloads/lowlatencyaudio-main/native-audio/.cxx",
-        "sdkFolder": "/root/Android/Sdk",
+        "rootBuildGradleFolder": "D:\\ctc\\Github\\native-audio2",
+        "cxxFolder": "D:\\ctc\\Github\\native-audio2\\.cxx",
+        "compilerSettingsCacheFolder": "D:\\ctc\\Github\\native-audio2\\.cxx",
+        "sdkFolder": "C:\\Users\\Ali\\AppData\\Local\\Android\\Sdk",
         "isNativeCompilerSettingsCacheEnabled": false,
         "isBuildOnlyTargetAbiEnabled": true,
-        "ideBuildTargetAbi": "arm64-v8a,armeabi-v7a,armeabi",
         "isCmakeBuildCohabitationEnabled": false,
         "isPrefabEnabled": false,
         "isV2NativeModelEnabled": true
       },
       "nativeBuildOutputLevel": "QUIET"
     },
-    "prefabDirectory": "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/.cxx/cmake/debug/prefab"
+    "prefabDirectory": "D:\\ctc\\Github\\native-audio2\\app\\.cxx\\cmake\\debug\\prefab"
   },
   "buildSettings": {
     "environmentVariables": []
   },
-  "prefabFolder": "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/.cxx/cmake/debug/prefab/arm64-v8a"
+  "prefabFolder": "D:\\ctc\\Github\\native-audio2\\app\\.cxx\\cmake\\debug\\prefab\\arm64-v8a"
 }

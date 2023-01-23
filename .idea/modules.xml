@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/native-audio.iml" filepath="$PROJECT_DIR$/.idea/modules/native-audio.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/native-audio.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/native-audio.app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/native-audio.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/native-audio.app.androidTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/native-audio.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/native-audio.app.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/native-audio.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/native-audio.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/native-audio2.iml" filepath="$PROJECT_DIR$/.idea/modules/native-audio2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/native-audio2.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/native-audio2.app.iml" />
     </modules>
   </component>
 </project>

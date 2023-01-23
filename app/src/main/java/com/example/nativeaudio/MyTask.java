@@ -184,7 +184,7 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
                 }
 
                 // replyDelay for the sender dictates the period between transmitting chirps
-                NativeAudio.calibrate(data, sig2, Constants.bufferSize, Constants.recTime, topfilename, bottomfilename, meta_filename,
+                NativeAudio.calibrate(data, sig2, Constants.bufferSize_spk, Constants.bufferSize, Constants.recTime, topfilename, bottomfilename, meta_filename,
                         initialOffset, warmdown_len, Constants.sig.length, Constants.water,
                         Constants.reply, Constants.naiser, (int) (Constants.replyDelay * Constants.fs), Constants.xcorrthresh,
                         Constants.minPeakDistance, Constants.fs, Constants.pre1, Constants.pre2, Constants.N0, Constants.CP,

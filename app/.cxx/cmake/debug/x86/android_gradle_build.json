@@ -1,19 +1,19 @@
 {
   "buildFiles": [
-    "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/CMakeLists.txt"
+    "D:\\ctc\\Github\\native-audio2\\app\\src\\main\\cpp\\CMakeLists.txt"
   ],
   "cleanCommandsComponents": [
     [
-      "/root/Android/Sdk/cmake/3.18.1/bin/ninja",
+      "C:/ProgramData/chocolatey/bin/ninja.exe",
       "-C",
-      "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/.cxx/cmake/debug/x86",
+      "D:\\ctc\\Github\\native-audio2\\app\\.cxx\\cmake\\debug\\x86",
       "clean"
     ]
   ],
   "buildTargetsCommandComponents": [
-    "/root/Android/Sdk/cmake/3.18.1/bin/ninja",
+    "ninja.exe",
     "-C",
-    "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/.cxx/cmake/debug/x86",
+    "D:\\ctc\\Github\\native-audio2\\app\\.cxx\\cmake\\debug\\x86",
     "{LIST_OF_TARGETS_TO_BUILD}"
   ],
   "libraries": {
@@ -21,14 +21,14 @@
       "toolchain": "toolchain",
       "abi": "x86",
       "artifactName": "native-audio-jni",
-      "output": "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/build/intermediates/cmake/debug/obj/x86/libnative-audio-jni.so",
+      "output": "D:\\ctc\\Github\\native-audio2\\app\\build\\intermediates\\cmake\\debug\\obj\\x86\\libnative-audio-jni.so",
       "runtimeFiles": []
     }
   },
   "toolchains": {
     "toolchain": {
-      "cCompilerExecutable": "/root/Android/Sdk/ndk/22.1.7171670/toolchains/llvm/prebuilt/linux-x86_64/bin/clang.lld",
-      "cppCompilerExecutable": "/root/Android/Sdk/ndk/22.1.7171670/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++.lld"
+      "cCompilerExecutable": "C:\\Users\\Ali\\AppData\\Local\\Android\\Sdk\\ndk\\22.1.7171670\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang.exe",
+      "cppCompilerExecutable": "C:\\Users\\Ali\\AppData\\Local\\Android\\Sdk\\ndk\\22.1.7171670\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang++.exe"
     }
   },
   "cFileExtensions": [

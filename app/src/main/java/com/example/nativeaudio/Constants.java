@@ -54,6 +54,7 @@ public class Constants {
     static int rounds = 1;
     static float initialDelay = 3f;
     static float bufSizeInSeconds=.2f;
+    static int bufferSize_spk=960;
     static float bigBufferSizeInSeconds = .2f;
     static ConstraintLayout clayout;
 

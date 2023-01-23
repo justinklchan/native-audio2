@@ -2,21 +2,21 @@
   {
     "level": "INFO",
     "message": "Start JSON generation. Platform version: 23 min SDK version: x86",
-    "file": "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/CMakeLists.txt",
+    "file": "D:\\ctc\\Github\\native-audio2\\app\\src\\main\\cpp\\CMakeLists.txt",
     "tag": "debug|x86",
     "diagnosticCode": "UNKNOWN"
   },
   {
     "level": "INFO",
-    "message": "JSON \u0027/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/.cxx/cmake/debug/x86/android_gradle_build.json\u0027 was up-to-date",
-    "file": "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/CMakeLists.txt",
+    "message": "JSON \u0027D:\\ctc\\Github\\native-audio2\\app\\.cxx\\cmake\\debug\\x86\\android_gradle_build.json\u0027 was up-to-date",
+    "file": "D:\\ctc\\Github\\native-audio2\\app\\src\\main\\cpp\\CMakeLists.txt",
     "tag": "debug|x86",
     "diagnosticCode": "UNKNOWN"
   },
   {
     "level": "INFO",
     "message": "JSON generation completed without problems",
-    "file": "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/CMakeLists.txt",
+    "file": "D:\\ctc\\Github\\native-audio2\\app\\src\\main\\cpp\\CMakeLists.txt",
     "tag": "debug|x86",
     "diagnosticCode": "UNKNOWN"
   }

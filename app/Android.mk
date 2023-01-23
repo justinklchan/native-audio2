@@ -1,4 +1,4 @@
-LOCAL_PATH := $(call /home/justin/)
+LOCAL_PATH := $(call /D:/ctc/Github/native-audio2/)
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := fftw3

@@ -1,26 +1,26 @@
 {
   "buildFiles": [
-    "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/CMakeLists.txt"
+    "D:\\ctc\\Github\\native-audio2\\app\\src\\main\\cpp\\CMakeLists.txt"
   ],
   "cleanCommandsComponents": [
     [
-      "/root/Android/Sdk/cmake/3.18.1/bin/ninja",
+      "C:/ProgramData/chocolatey/bin/ninja.exe",
       "-C",
-      "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/.cxx/cmake/debug/x86",
+      "D:\\ctc\\Github\\native-audio2\\app\\.cxx\\cmake\\debug\\x86",
       "clean"
     ]
   ],
   "buildTargetsCommandComponents": [
-    "/root/Android/Sdk/cmake/3.18.1/bin/ninja",
+    "ninja.exe",
     "-C",
-    "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/.cxx/cmake/debug/x86",
+    "D:\\ctc\\Github\\native-audio2\\app\\.cxx\\cmake\\debug\\x86",
     "{LIST_OF_TARGETS_TO_BUILD}"
   ],
   "libraries": {
     "native-audio-jni::@6890427a1f51a3e7e1df": {
       "artifactName": "native-audio-jni",
       "abi": "x86",
-      "output": "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/build/intermediates/cmake/debug/obj/x86/libnative-audio-jni.so",
+      "output": "D:\\ctc\\Github\\native-audio2\\app\\build\\intermediates\\cmake\\debug\\obj\\x86\\libnative-audio-jni.so",
       "runtimeFiles": []
     }
   }

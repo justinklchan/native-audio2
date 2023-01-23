@@ -662,7 +662,7 @@ public class NativeAudio extends AppCompatActivity
     public static native void forcewrite();
     public static native void shutdown();
     public static native long nowms2();
-    public static native void calibrate(short[] data, short[] refData, int bufferSize, int recordTime,
+    public static native void calibrate(short[] data, short[] refData, int bufferSize_spk, int bufferSize_mic, int recordTime,
                                         String topfilename, String bottomfilename,
                                         String meta_filename, int initialOffset, int warmdown_len, int preamble_len,
                                         boolean water,
@@ -670,6 +670,7 @@ public class NativeAudio extends AppCompatActivity
                                         int fs, double[] naiserTx1, double[] naiserTx2, int N0, boolean CP, float naiserThresh, float naiserShoulder,
                                         int win_size, int bias, int seekback, double pthresh, int round, int filenum, boolean runxcorr, float initialDelay,
                                         String mic_ts_fname, String speaker_ts_fname,int bigBufferSize,int bigBufferTimes, int numSym);
+
     public static native void testxcorr(double[] data, double[] refData, double[] refData2, int N0, boolean CP);
     public static native double[] getDistance(boolean reply);
     public static native double[] getVal();

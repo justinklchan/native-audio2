@@ -1,7 +1,7 @@
 [
 {
-  "directory": "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/.cxx/cmake/debug/arm64-v8a",
-  "command": "/root/Android/Sdk/ndk/22.1.7171670/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android23 --gcc-toolchain=/root/Android/Sdk/ndk/22.1.7171670/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/root/Android/Sdk/ndk/22.1.7171670/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Dnative_audio_jni_EXPORTS -I/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/../../../../fftw3/include -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -std=c99 -Wall -O0 -fno-limit-debug-info  -fPIC -o CMakeFiles/native-audio-jni.dir/native-audio-jni.c.o -c /home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/native-audio-jni.c",
-  "file": "/home/justin/Downloads/lowlatencyaudio-main/native-audio/app/src/main/cpp/native-audio-jni.c"
+  "directory": "D:/ctc/Github/native-audio2/app/.cxx/cmake/debug/arm64-v8a",
+  "command": "C:\\Users\\Ali\\AppData\\Local\\Android\\Sdk\\ndk\\22.1.7171670\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang.exe --target=aarch64-none-linux-android23 --gcc-toolchain=C:/Users/Ali/AppData/Local/Android/Sdk/ndk/22.1.7171670/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/Ali/AppData/Local/Android/Sdk/ndk/22.1.7171670/toolchains/llvm/prebuilt/windows-x86_64/sysroot -Dnative_audio_jni_EXPORTS -ID:/ctc/Github/native-audio2/app/src/main/cpp/../../../../fftw3/include -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -std=c99 -Wall -O0 -fno-limit-debug-info  -fPIC -o CMakeFiles\\native-audio-jni.dir\\native-audio-jni.c.o -c D:\\ctc\\Github\\native-audio2\\app\\src\\main\\cpp\\native-audio-jni.c",
+  "file": "D:\\ctc\\Github\\native-audio2\\app\\src\\main\\cpp\\native-audio-jni.c"
 }
 ]
