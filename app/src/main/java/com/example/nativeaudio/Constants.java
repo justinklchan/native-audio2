@@ -26,12 +26,12 @@ public class Constants {
     public static int bufferSize,bigBufferSize,bigBufferTimes;
     public static boolean stop=false;
     public static boolean initsleeping=false;
-    static EditText et1,et2,et3,et4,et5,et6,et7,et8,et9,et10,et11,et12,et13,et14,et15;
+    static EditText et1,et2,et3,et4,et5,et6,et7,et8,et9,et10,et13,et14,et15; //et11,et12,
     public static NestedScrollView sview;
     static int fs=44100;
-    static float naiserThresh=0.1f, naiserShoulder=0.8f;
-    static int win_size=4800;
-    static int bias=320;
+    static float naiserThresh=0.3f, naiserShoulder=0.8f;
+    static int win_size=3600;
+    static int bias=240;
     static int initSleep=0;
     static float xcorrthresh=2f;
     public static float replyDelay = 3.0f;
@@ -41,6 +41,7 @@ public class Constants {
     static int fileID=0;
     static int recTime=30;
     static int N0;
+    static int Ns;
     static boolean CP;
     static TextView tv,tv2,distOut,debugPane,tv11;
     static Switch sw1,sw2,sw3,sw4;
@@ -48,13 +49,17 @@ public class Constants {
     static AsyncTask task;
     static CountDownTimer timer;
     static double[] pre1,pre2;
+    static double[] leader_pre1,leader_pre2;
+
     static short[] sig=null;
+    static short[] leader_sig=null;
     static int seekback=960;
+    static int user_id = 0;
     static float pthresh=.65f;
     static int rounds = 1;
     static float initialDelay = 3f;
     static float bufSizeInSeconds=.2f;
-    static int bufferSize_spk=960;
+    static int bufferSize_spk=960*2;
     static float bigBufferSizeInSeconds = .2f;
     static ConstraintLayout clayout;
 
@@ -88,13 +93,15 @@ public class Constants {
         Constants.fileID=prefs.getInt("fileID",fileID);
         Constants.naiserThresh=prefs.getFloat("naiserThresh",naiserThresh);
         Constants.naiserShoulder=prefs.getFloat("naiserShoulder",naiserShoulder);
-        Constants.win_size=prefs.getInt("win_size",win_size);
-        Constants.bias=prefs.getInt("bias",bias);
-        Constants.seekback=prefs.getInt("seekback",seekback);
+//        Constants.win_size=prefs.getInt("win_size",win_size);
+//        Constants.bias=prefs.getInt("bias",bias);
+//        Constants.seekback=prefs.getInt("seekback",seekback);
         Constants.pthresh=prefs.getFloat("pthresh",pthresh);
         Constants.rounds=prefs.getInt("rounds",rounds);
         Constants.runxcorr=prefs.getBoolean("runxcorr",runxcorr);
         Constants.initialDelay=prefs.getFloat("initialDelay",initialDelay);
+        Constants.user_id = prefs.getInt("user_id",user_id);
+
 
         et1.setText(vol+"");
         et2.setText(recTime+"");
@@ -105,9 +112,7 @@ public class Constants {
         et7.setText(fileID+"");
         et8.setText(naiserThresh+"");
         et9.setText(naiserShoulder+"");
-        et10.setText(win_size+"");
-        et11.setText(bias+"");
-        et12.setText(seekback+"");
+        et10.setText(user_id+"");
         et13.setText(pthresh+"");
         et14.setText(rounds+"");
         et15.setText(initialDelay+"");
@@ -158,8 +163,8 @@ public class Constants {
         Constants.et8.setEnabled(!Constants.et8.isEnabled());
         Constants.et9.setEnabled(!Constants.et9.isEnabled());
         Constants.et10.setEnabled(!Constants.et10.isEnabled());
-        Constants.et11.setEnabled(!Constants.et11.isEnabled());
-        Constants.et12.setEnabled(!Constants.et12.isEnabled());
+//        Constants.et11.setEnabled(!Constants.et11.isEnabled());
+//        Constants.et12.setEnabled(!Constants.et12.isEnabled());
         Constants.et13.setEnabled(!Constants.et13.isEnabled());
         Constants.et14.setEnabled(!Constants.et14.isEnabled());
         Constants.et15.setEnabled(!Constants.et15.isEnabled());
@@ -174,93 +179,94 @@ public class Constants {
             txt="online1";
             N0=480;
         }
-        else if (Constants.fileID==1) {
-            sig=FileOperations.readrawasset_binary(cxt, R.raw.signal_720_360_cp);
-            pre1=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.cp_train_sig1));
-            pre2=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.cp_train_sig2));
-            txt="signal_N_720_360_CP";
-            N0=360;
-            CP=true;
-        }
-        else if (Constants.fileID==2) {
-            sig=FileOperations.readrawasset_binary(cxt, R.raw.signal_720_360_gi);
-            pre1=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.gi_train_sig1));
-            pre2=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.gi_train_sig2));
-            txt="signal_N_720_360_GI";
-            N0=360;
+        else if(Constants.fileID==1){
+            txt=" N_seq7_960-360-1000-5000";
+            N0 = 360;
+            Ns = 960;
             CP=false;
-        }
-        else if (Constants.fileID==3) {
-            sig=FileOperations.readrawasset_binary(cxt, R.raw.signal_720_360_half);
-            pre1=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.half_train_sig1));
-            pre2=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.half_train_sig2));
-            txt="signal_N_720_360_HALF";
-            N0=360;
-            CP=false;
-        }
-        else if (Constants.fileID==4) {
-            sig=FileOperations.readrawasset_binary(cxt, R.raw.n_1080_360_half_signal);
-            pre1=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n_1080_360_half_signal_train_sig1));
-            pre2=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n_1080_360_half_signal_train_sig2));
-            txt="signal_N_1080_360_HALF";
-            N0=360;
-            CP=false;
-        }
-        else if (Constants.fileID==5) {
-            sig=FileOperations.readrawasset_binary(cxt, R.raw.n_1260_480_half_signal);
-            pre1=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n_1260_480_half_train_sig1));
-            pre2=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n_1260_480_half_train_sig2));
-            txt="signal_N_1260_480_HALF";
-            N0=480;
-            CP=false;
-        }
-        else if (Constants.fileID==6) {
-            sig=FileOperations.readrawasset_binary(cxt, R.raw.signal_960_360_1000_3000);
-            pre1=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n960_360_1000_3000_t1));
-            pre2=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n960_360_1000_3000_t2));
-            txt="n960_360_1000_3000_t1";
-            N0=360;
-            CP=false;
-        }
-        else if (Constants.fileID==7) {
-            sig=FileOperations.readrawasset_binary(cxt, R.raw.signal_960_360_1000_5000);
-            pre1=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n960_360_1000_5000_t1));
-            pre2=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n960_360_1000_5000_t2));
-            txt="n960_360_1000_5000";
-            N0=360;
-            CP=false;
-        }
-        else if (Constants.fileID==8) {
-            sig=FileOperations.readrawasset_binary(cxt, R.raw.signal_960_360_1000_9000);
-            pre1=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n960_360_1000_9000_t1));
-            pre2=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n960_360_1000_9000_t2));
-            txt="n960_360_1000_9000";
-            N0=360;
-            CP=false;
-        }
-        else if (Constants.fileID==9) {
-            sig=FileOperations.readrawasset_binary(cxt, R.raw.signal_1260_480_1000_3000);
-            pre1=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n1260_480_1000_3000_t1));
-            pre2=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n1260_480_1000_3000_t2));
-            txt="n1260_480_1000_3000";
-            N0=480;
-            CP=false;
-        }
-        else if (Constants.fileID==10) {
-            sig=FileOperations.readrawasset_binary(cxt, R.raw.signal_1260_480_1000_5000);
-            pre1=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n1260_480_1000_5000_t1));
-            pre2=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n1260_480_1000_5000_t2));
-            txt="n1260_480_1000_5000";
-            N0=480;
-            CP=false;
-        }
-        else if (Constants.fileID==11) {
-            sig=FileOperations.readrawasset_binary(cxt, R.raw.signal_1260_480_1000_6000);
-            pre1=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n1260_480_1000_6000_t1));
-            pre2=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n1260_480_1000_6000_t2));
-            txt="n1260_480_1000_6000";
-            N0=480;
-            CP=false;
+            numsym=7;
+            leader_sig=FileOperations.readrawasset_binary(cxt, R.raw.seq7_1_960_360_1000_5000);
+            leader_pre1 =new double[Ns];
+            for (int i = 0; i < Ns; i++) {
+                leader_pre1[i]=leader_sig[i+N0]/31000.0;
+            }
+            leader_pre2 = new double[leader_sig.length];
+            for (int i = 0; i < leader_pre2.length; i++) {
+                leader_pre2[i]=leader_sig[i]/31000.0;
+            }
+
+            if(!Constants.reply) {
+                sig=FileOperations.readrawasset_binary(cxt, R.raw.seq7_1_960_360_1000_5000);
+                pre1 = new double[Ns];
+                for (int i = 0; i < Ns; i++) {
+                    pre1[i] = leader_pre1[i]/31000;
+                }
+                pre2 = new double[leader_pre2.length];
+                for (int i = 0; i < leader_pre2.length; i++) {
+                    pre2[i] = leader_pre2[i]/31000.0;
+                }
+            }
+            else if(Constants.user_id == 0){
+                sig=FileOperations.readrawasset_binary(cxt, R.raw.seq7_11_960_360_1000_5000);
+                pre1 = new double[Ns];
+                pre2 = new double[sig.length];
+
+                for (int i = 0; i < Ns; i++) {
+                    pre1[i]=sig[i+N0]/31000;
+                }
+                for (int i = 0; i < pre2.length; i++) {
+                    pre2[i]=sig[i]/31000.0;
+                }
+            }
+            else if(Constants.user_id == 1){
+                sig =FileOperations.readrawasset_binary(cxt, R.raw.seq7_22_960_360_1000_5000);
+                pre1 = new double[Ns];
+                pre2 = new double[sig.length];
+
+                for (int i = 0; i < Ns; i++) {
+                    pre1[i]=sig[i+N0]/31000;
+                }
+                for (int i = 0; i < pre2.length; i++) {
+                    pre2[i]=sig[i]/31000.0;
+                }
+            }
+            else if(Constants.user_id == 2){
+                sig=FileOperations.readrawasset_binary(cxt, R.raw.seq7_35_960_360_1000_5000);
+                pre1 = new double[Ns];
+                pre2 = new double[sig.length];
+
+                for (int i = 0; i < Ns; i++) {
+                    pre1[i]=sig[i+N0]/31000;
+                }
+                for (int i = 0; i < pre2.length; i++) {
+                    pre2[i]=sig[i]/31000.0;
+                }
+            }
+            else if(Constants.user_id == 3){
+                sig=FileOperations.readrawasset_binary(cxt, R.raw.seq7_41_960_360_1000_5000);
+                pre1 = new double[Ns];
+                pre2 = new double[sig.length];
+
+                for (int i = 0; i < Ns; i++) {
+                    pre1[i]=sig[i+N0]/31000;
+                }
+                for (int i = 0; i < pre2.length; i++) {
+                    pre2[i]=sig[i]/31000.0;
+                }
+            }
+            else if(Constants.user_id == 4){
+                sig=FileOperations.readrawasset_binary(cxt, R.raw.seq7_76_960_360_1000_5000);
+                pre1 = new double[Ns];
+                pre2 = new double[sig.length];
+
+                for (int i = 0; i < Ns; i++) {
+                    pre1[i]=sig[i+N0]/31000;
+                }
+                for (int i = 0; i < pre2.length; i++) {
+                    pre2[i]=sig[i]/31000.0;
+                }
+            }
+
         }
         else if (Constants.fileID==12) {
             sig=FileOperations.readrawasset_binary(cxt, R.raw.signal_1260_480_1000_7000);

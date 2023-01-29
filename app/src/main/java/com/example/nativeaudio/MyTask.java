@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.AsyncTask;
+import android.os.ConditionVariable;
 import android.os.CountDownTimer;
 import android.util.Log;
 
@@ -141,7 +142,7 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
     }
 
     public void work() {
-        int begin_gap = 4000;
+        int begin_gap = 6000;
         int warmup_len = 2000; //don't make this too large otherwise it will trigger xcorr
         int gap_len=2000;
         int warmdown_len=0;
@@ -176,18 +177,26 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
             String speaker_ts_filename = dir  + "/"+Constants.tt+ "/" + Constants.tt + "-" + Constants.fileID + "-speaker_ts.txt";
 
             int initialOffset = begin_gap + warmup_len + gap_len;
+            int reply_delay = (int) (Constants.replyDelay * Constants.fs);
+            if(Constants.reply){
+                reply_delay = (int) ((Constants.replyDelay + ((double)Constants.user_id)*0.27) * Constants.fs);
+            }
             if (!Constants.stop) {
+                short[] sig = new short[Constants.sig.length];
                 short[] sig2 = new short[Constants.sig.length];
                 int counter=0;
                 for (Short s : Constants.sig) {
                     sig2[counter++]=(short)(s*Constants.vol);
                 }
-
+                counter=0;
+                for (Short s : Constants.leader_sig) {
+                    sig[counter++]=(short)(s*Constants.vol);
+                }
                 // replyDelay for the sender dictates the period between transmitting chirps
-                NativeAudio.calibrate(data, sig2, Constants.bufferSize_spk, Constants.bufferSize, Constants.recTime, topfilename, bottomfilename, meta_filename,
+                NativeAudio.calibrate(sig, sig2, Constants.bufferSize_spk, Constants.bufferSize, Constants.recTime, topfilename, bottomfilename, meta_filename,
                         initialOffset, warmdown_len, Constants.sig.length, Constants.water,
-                        Constants.reply, Constants.naiser, (int) (Constants.replyDelay * Constants.fs), Constants.xcorrthresh,
-                        Constants.minPeakDistance, Constants.fs, Constants.pre1, Constants.pre2, Constants.N0, Constants.CP,
+                        Constants.reply, Constants.naiser, reply_delay, Constants.xcorrthresh,
+                        Constants.minPeakDistance, Constants.fs, Constants.leader_pre1, Constants.leader_pre2, Constants.N0, Constants.CP,
                         Constants.naiserThresh, Constants.naiserShoulder, Constants.win_size, Constants.bias,
                         Constants.seekback, Constants.pthresh, 0, Constants.fileID, Constants.runxcorr, Constants.initialDelay,
                         mic_ts_filename,speaker_ts_filename,Constants.bigBufferSize,Constants.bigBufferTimes,Constants.numsym);

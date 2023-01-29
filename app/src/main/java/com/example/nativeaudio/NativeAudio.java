@@ -150,8 +150,8 @@ public class NativeAudio extends AppCompatActivity
         Constants.et8 = (EditText)findViewById(R.id.editTextNumber3);
         Constants.et9 = (EditText)findViewById(R.id.editTextNumber4);
         Constants.et10 = (EditText)findViewById(R.id.editTextNumber6);
-        Constants.et11 = (EditText)findViewById(R.id.editTextNumber7);
-        Constants.et12 = (EditText)findViewById(R.id.editTextNumber8);
+//        Constants.et11 = (EditText)findViewById(R.id.editTextNumber7);
+//        Constants.et12 = (EditText)findViewById(R.id.editTextNumber8);
         Constants.et13 = (EditText)findViewById(R.id.editTextNumberDecimal5);
         Constants.et14 = (EditText)findViewById(R.id.editTextNumber9);
         Constants.et15 = (EditText)findViewById(R.id.editTextNumber);
@@ -385,54 +385,54 @@ public class NativeAudio extends AppCompatActivity
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(NativeAudio.this).edit();
                 String ss = Constants.et10.getText().toString();
                 if (Utils.isInteger(ss)) {
-                    editor.putInt("win_size", Integer.parseInt(ss));
+                    editor.putInt("user_id", Integer.parseInt(ss));
                     editor.commit();
-                    Constants.win_size = Integer.parseInt(ss);
+                    Constants.user_id = Integer.parseInt(ss);
                 }
             }
         });
 
-        Constants.et11.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-            @Override
-            public void beforeTextChanged(CharSequence s, int start,
-                                          int count, int after) {
-            }
-            @Override
-            public void onTextChanged(CharSequence s, int start,
-                                      int before, int count) {
-                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(NativeAudio.this).edit();
-                String ss = Constants.et11.getText().toString();
-                if (Utils.isInteger(ss)) {
-                    editor.putInt("bias", Integer.parseInt(ss));
-                    editor.commit();
-                    Constants.bias = Integer.parseInt(ss);
-                }
-            }
-        });
-
-        Constants.et12.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-            @Override
-            public void beforeTextChanged(CharSequence s, int start,
-                                          int count, int after) {
-            }
-            @Override
-            public void onTextChanged(CharSequence s, int start,
-                                      int before, int count) {
-                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(NativeAudio.this).edit();
-                String ss = Constants.et12.getText().toString();
-                if (Utils.isInteger(ss)) {
-                    editor.putInt("seekback", Integer.parseInt(ss));
-                    editor.commit();
-                    Constants.seekback = Integer.parseInt(ss);
-                }
-            }
-        });
+//        Constants.et11.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//            }
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start,
+//                                          int count, int after) {
+//            }
+//            @Override
+//            public void onTextChanged(CharSequence s, int start,
+//                                      int before, int count) {
+//                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(NativeAudio.this).edit();
+//                String ss = Constants.et11.getText().toString();
+//                if (Utils.isInteger(ss)) {
+//                    editor.putInt("bias", Integer.parseInt(ss));
+//                    editor.commit();
+//                    Constants.bias = Integer.parseInt(ss);
+//                }
+//            }
+//        });
+//
+//        Constants.et12.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//            }
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start,
+//                                          int count, int after) {
+//            }
+//            @Override
+//            public void onTextChanged(CharSequence s, int start,
+//                                      int before, int count) {
+//                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(NativeAudio.this).edit();
+//                String ss = Constants.et12.getText().toString();
+//                if (Utils.isInteger(ss)) {
+//                    editor.putInt("seekback", Integer.parseInt(ss));
+//                    editor.commit();
+//                    Constants.seekback = Integer.parseInt(ss);
+//                }
+//            }
+//        });
 
         Constants.et13.addTextChangedListener(new TextWatcher() {
             @Override
@@ -614,7 +614,7 @@ public class NativeAudio extends AppCompatActivity
                 Constants.runxcorr  = isChecked;
             }
         });
-        Tests.testxcorr(this);
+//        Tests.testxcorr(this);
     }
 
     // Single out recording for run-permission needs
@@ -667,7 +667,8 @@ public class NativeAudio extends AppCompatActivity
                                         String meta_filename, int initialOffset, int warmdown_len, int preamble_len,
                                         boolean water,
                                         boolean reply, boolean naiser, int sendDelay,float xcorrthresh, float minPeakDistance,
-                                        int fs, double[] naiserTx1, double[] naiserTx2, int N0, boolean CP, float naiserThresh, float naiserShoulder,
+                                        int fs,
+                                        double[] naiserTx1, double[] naiserTx2, int N0, boolean CP, float naiserThresh, float naiserShoulder,
                                         int win_size, int bias, int seekback, double pthresh, int round, int filenum, boolean runxcorr, float initialDelay,
                                         String mic_ts_fname, String speaker_ts_fname,int bigBufferSize,int bigBufferTimes, int numSym);
 
