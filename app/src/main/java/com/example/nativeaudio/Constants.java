@@ -268,13 +268,93 @@ public class Constants {
             }
 
         }
-        else if (Constants.fileID==12) {
-            sig=FileOperations.readrawasset_binary(cxt, R.raw.signal_1260_480_1000_7000);
-            pre1=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n1260_480_1000_7000_t1));
-            pre2=Utils.convert(FileOperations.readrawasset_binary(cxt,R.raw.n1260_480_1000_7000_t2));
-            txt="n1260_480_1000_7000";
-            N0=480;
+        else if (Constants.fileID==2) {
+            txt=" seq5_1450_480_1000_5000";
+            N0 = 480;
+            Ns = 1450;
             CP=false;
+            numsym=5;
+            leader_sig=FileOperations.readrawasset_binary(cxt, R.raw.seq5_1_1450_480_1000_5000);
+            leader_pre1 =new double[Ns];
+            for (int i = 0; i < Ns; i++) {
+                leader_pre1[i]=leader_sig[i+N0]/31000.0;
+            }
+            leader_pre2 = new double[leader_sig.length];
+            for (int i = 0; i < leader_pre2.length; i++) {
+                leader_pre2[i]=leader_sig[i]/31000.0;
+            }
+
+            if(!Constants.reply) {
+                sig=FileOperations.readrawasset_binary(cxt, R.raw.seq5_1_1450_480_1000_5000);
+                pre1 = new double[Ns];
+                for (int i = 0; i < Ns; i++) {
+                    pre1[i] = leader_pre1[i]/31000;
+                }
+                pre2 = new double[leader_pre2.length];
+                for (int i = 0; i < leader_pre2.length; i++) {
+                    pre2[i] = leader_pre2[i]/31000.0;
+                }
+            }
+            else if(Constants.user_id == 0){
+                sig=FileOperations.readrawasset_binary(cxt, R.raw.seq5_5_1450_480_1000_5000);
+                pre1 = new double[Ns];
+                pre2 = new double[sig.length];
+
+                for (int i = 0; i < Ns; i++) {
+                    pre1[i]=sig[i+N0]/31000;
+                }
+                for (int i = 0; i < pre2.length; i++) {
+                    pre2[i]=sig[i]/31000.0;
+                }
+            }
+            else if(Constants.user_id == 1){
+                sig =FileOperations.readrawasset_binary(cxt, R.raw.seq5_11_1450_480_1000_5000);
+                pre1 = new double[Ns];
+                pre2 = new double[sig.length];
+
+                for (int i = 0; i < Ns; i++) {
+                    pre1[i]=sig[i+N0]/31000;
+                }
+                for (int i = 0; i < pre2.length; i++) {
+                    pre2[i]=sig[i]/31000.0;
+                }
+            }
+            else if(Constants.user_id == 2){
+                sig=FileOperations.readrawasset_binary(cxt, R.raw.seq5_22_1450_480_1000_5000);
+                pre1 = new double[Ns];
+                pre2 = new double[sig.length];
+
+                for (int i = 0; i < Ns; i++) {
+                    pre1[i]=sig[i+N0]/31000;
+                }
+                for (int i = 0; i < pre2.length; i++) {
+                    pre2[i]=sig[i]/31000.0;
+                }
+            }
+            else if(Constants.user_id == 3){
+                sig=FileOperations.readrawasset_binary(cxt, R.raw.seq5_35_1450_480_1000_5000);
+                pre1 = new double[Ns];
+                pre2 = new double[sig.length];
+
+                for (int i = 0; i < Ns; i++) {
+                    pre1[i]=sig[i+N0]/31000;
+                }
+                for (int i = 0; i < pre2.length; i++) {
+                    pre2[i]=sig[i]/31000.0;
+                }
+            }
+            else if(Constants.user_id == 4){
+                sig=FileOperations.readrawasset_binary(cxt, R.raw.seq5_49_1450_480_1000_5000);
+                pre1 = new double[Ns];
+                pre2 = new double[sig.length];
+
+                for (int i = 0; i < Ns; i++) {
+                    pre1[i]=sig[i+N0]/31000;
+                }
+                for (int i = 0; i < pre2.length; i++) {
+                    pre2[i]=sig[i]/31000.0;
+                }
+            }
         }
         else if (Constants.fileID==13) {
             sig=FileOperations.readrawasset_binary(cxt, R.raw.signal_1260_480_1000_9000);

@@ -203,7 +203,10 @@ double distance3=0;
 int self_chirp_idx=-1;
 int last_chirp_idx=-1;
 double chirp_indexes[5] = {-1,-1,-1,-1,-1};
-short PN_seq[7] = {1, 1, 1, -1, 1, -1, -1};
+// short PN_seq[7] = {1, 1, 1, -1, 1, -1, -1};
+//PN_seq[5] = [1, 1, -1, 1, -1];
+
+short PN_seq[7] = {0};
 
 int lastidx=0;
 double last_xcorr_val=0;
@@ -1337,6 +1340,27 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
     responder = reply;
     int bufferSize_mic = bSize_mic;
     int bufferSize_spk = bSize_spk;
+
+
+    if(numSym == 7){
+        //{1, 1, 1, -1, 1, -1, -1};
+        PN_seq[0] = 1;
+        PN_seq[1] = 1;
+        PN_seq[2] = 1;
+        PN_seq[3] = -1;
+        PN_seq[4] = 1;
+        PN_seq[5] = -1;
+        PN_seq[6] = -1;
+
+
+    }else if(num_sym == 5){
+        //PN_seq[5] = [1, 1, -1, 1, -1];
+        PN_seq[0] = 1;
+        PN_seq[1] = 1;
+        PN_seq[2] = -1;
+        PN_seq[3] = 1;
+        PN_seq[4] = -1;
+    }
 
     reply_ready=JNI_FALSE;
     receivedIdx=-1;
