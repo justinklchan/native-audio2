@@ -42,10 +42,14 @@
       <sourceFolder url="file://$MODULE_DIR$/../../../app/src/main/assets" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/../../../app/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../../../app/src/main/res" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../app/src/main/cpp" type="native-Source-root" />
       <excludeFolder url="file://$MODULE_DIR$/../../../app/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/../../../app/build" />
       <excludeFolder url="file://$MODULE_DIR$/../../../app/.externalNativeBuild" />
       <excludeFolder url="file://$MODULE_DIR$/../../../app/.cxx" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../fftw3/include">
+      <sourceFolder url="file://$MODULE_DIR$/../../../fftw3/include" type="native-header-root" />
     </content>
     <orderEntry type="jdk" jdkName="Android API 31 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -1,7 +1,0 @@
-Executable : ninja.exe
-arguments : 
--C
-D:\ctc\Github\native-audio2\app\.cxx\cmake\debug\x86
-native-audio-jni
-jvmArgs : 
-

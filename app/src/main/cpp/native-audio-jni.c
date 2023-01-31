@@ -1353,7 +1353,7 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
         PN_seq[6] = -1;
 
 
-    }else if(num_sym == 5){
+    }else if(numSym == 5){
         //PN_seq[5] = [1, 1, -1, 1, -1];
         PN_seq[0] = 1;
         PN_seq[1] = 1;
@@ -1919,6 +1919,7 @@ int findhpeak(double* h, int Ntx1, int bias) {
     for (int i = 1; i < maxidx+10; i++) {
         if (i < Ntx1 && h[i-1] < h[i] && h[i] > h[i+1] && h[i] > maxval*.65 && i-prevpeakidx >= 2) {
             peaksidxs[peakcounter++]=i;
+            prevpeakidx = i;
         }
     }
 
@@ -2008,11 +2009,9 @@ int corr2(int N, int xcorr_idx, double* filteredData, mycontext* cxt2, int globa
                                              N0,  BW1,  BW2,  FS, cxt2->numSyms);
 //            char*  str1 = getString_d(cxt2->naiserTx1, Ntx1);
             int h_idx=findhpeak(h,Ntx1,cxt2->bias);
-
             end = clock();
             time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 //            __android_log_print(ANDROID_LOG_VERBOSE, "time3", "%.4f", time_spent);
-
             free(h);
             free(h_sig);
             if (h_idx>0) {
