@@ -14,6 +14,8 @@ import android.util.Log;
 import java.io.File;
 import java.util.ArrayList;
 
+import androidx.appcompat.widget.TintTypedArray;
+
 public class MyTask extends AsyncTask<Void, Void, Void> {
 
     Activity av;
@@ -202,14 +204,12 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
                         mic_ts_filename,speaker_ts_filename,Constants.bigBufferSize,Constants.bigBufferTimes,Constants.numsym);
 
                 try {
-//                    int sleepTime = (int) (((double) Constants.bufferSize / Constants.fs) * 1000);
-//                    int numberOfBuffers = (int)((Constants.recTime/Constants.bufSizeInSeconds)+1);
                     double sleepTimeInSeconds = .2;
                     int numberOfBuffers = (int)((Constants.recTime/sleepTimeInSeconds)+1);
                     for (int i = 0; i < numberOfBuffers; i++) {
 //                        Log.e("asdf","buffer "+i);
                         double[] vals = NativeAudio.getVal();
-                        Utils.log( String.format("%.2f %.2f\n",vals[0],vals[1]));
+//                        Utils.log( String.format("%.2f %.2f\n",vals[0],vals[1]));
                         Thread.sleep((int)(sleepTimeInSeconds*1000));
 //                        Thread.sleep((int)(sleepTime));
 
@@ -228,6 +228,16 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
                            }
                        });
 //                        Log.e("debug2",NativeAudio.getXcorrCount()+" "+ NativeAudio.replySet());
+                        int[] result = NativeAudio.getReplyIndexes();
+                        String arrayStr="";
+                        for(int k = 0; k < result.length; k = k+2) {
+                            arrayStr += result[k];
+                            arrayStr += ", ";
+                            arrayStr += result[k+1];
+                            arrayStr += "\n";
+                        }
+                        Utils.clear();
+                        Utils.log(arrayStr);
                         if (!Constants.reply) {
                             (NativeAudio.av).runOnUiThread(new Runnable() {
                                 @Override
@@ -240,18 +250,7 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
                                         else {
                                             Constants.clayout.setBackgroundColor(Color.argb(255, 255, 0, 0));
                                         }
-//                                        if (NativeAudio.getXcorrCount() == 2 && !senderSet1 && !Constants.stop) {
-//                                            Constants.clayout.setBackgroundColor(Color.argb(255, 255, 0, 0));
-//                                            senderSet1=true;
-//                                        }
-//                                        if (NativeAudio.getXcorrCount() == 3 && !senderSet2 && !Constants.stop) {
-//                                            Constants.clayout.setBackgroundColor(Color.argb(255, 0, 255, 0));
-//                                            senderSet2=true;
-//                                        }
-//                                        if (NativeAudio.getXcorrCount() == 4 && !senderSet3 && !Constants.stop) {
-//                                            Constants.clayout.setBackgroundColor(Color.argb(255, 0, 0, 255));
-//                                            senderSet3=true;
-//                                        }
+//
                                     }
                                 }
                             });

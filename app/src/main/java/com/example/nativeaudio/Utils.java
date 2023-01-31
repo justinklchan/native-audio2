@@ -35,7 +35,16 @@ public class Utils {
         (NativeAudio.av).runOnUiThread(new Runnable() {
             @Override
             public void run() {
-//                Constants.debugPane.setText(Constants.debugPane.getText()+s);
+                Constants.debugPane.setText(Constants.debugPane.getText()+s);
+                scrollToBottom();
+            }
+        });
+    }
+    public static void clear() {
+        (NativeAudio.av).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Constants.debugPane.setText("");
                 scrollToBottom();
             }
         });

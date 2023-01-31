@@ -93,6 +93,7 @@ jboolean freed = JNI_FALSE;
 
 float initialCalibrationDelay=0;
 int chirpsPlayed = 0;
+int recv_indexes[100];
 double dtx = .8/100;
 double drx = 3.3/100;
 typedef struct mycontext{
@@ -633,7 +634,13 @@ void setReply(int idx, mycontext* cxt0) {
         if (replyIdx1 < cxt0->dataSize-cxt0->preamble_len-cxt0->bufferSize) {
             reply_ready = JNI_TRUE;
             cxt0->sendReply = JNI_FALSE;
-            chirpsPlayed+=1;
+            if(2*chirpsPlayed < 100){
+                recv_indexes[2*chirpsPlayed] = idx;
+                recv_indexes[2*chirpsPlayed + 1] = replyIdx1;
+                chirpsPlayed+=1;
+            }
+
+
             if (reply_ready && replyIdx1 >= 0) {
                 pthread_mutex_lock(&speaker_mutex);
                 __android_log_print(ANDROID_LOG_VERBOSE,"speaker_debug","Write to speaker buffer from %d to %d: %d, %d, %d", replyIdx1, replyIdx1+cxt->preamble_len, idx, cxt0->timingOffset, cxt0->sendDelay);
@@ -652,14 +659,16 @@ void updateTimingOffset(int global_xcorr_idx, int local_chirp_idx, mycontext* cx
     double oneSampleDelay = 1.0/FS;
     int transmitDelay = (int) (((33.0 / 1000) / cxt->speed)/oneSampleDelay); // comment TUOCHAO: NEED TO VERIFY
     cxt->timingOffset = global_xcorr_idx - (cxt->initialOffset); // - transmitDelay;
+    if(2*chirpsPlayed < 100){
+        recv_indexes[2*chirpsPlayed] = global_xcorr_idx;
+        recv_indexes[2*chirpsPlayed + 1] = cxt->timingOffset;
+        chirpsPlayed+=1;
+    }
+
+
     __android_log_print(ANDROID_LOG_VERBOSE,"speaker_debug","Initial calibration %d to %d, %d --- %d", global_xcorr_idx, cxt->initialOffset, transmitDelay, cxt->timingOffset);
     //__android_log_print(ANDROID_LOG_VERBOSE,"debug_tau","detect leader chirp in phase 2 = %d", global_xcorr_idx);
-    if (cxt->timingOffset < 0) {
-//        __android_log_print(ANDROID_LOG_VERBOSE, "debug","break");
-    }
-//    __android_log_print(ANDROID_LOG_VERBOSE, "debug",
-//                        "UPDATE TIMING OFFSET %d %d %d %d %d %d %d",global_xcorr_idx, local_chirp_idx, cxt->initialOffset,
-//                        transmitDelay,cxt->timingOffset,cxt->speed,cxt->processedSegments);
+
     timeOffsetUpdated=JNI_TRUE;
 }
 
@@ -1006,14 +1015,15 @@ Java_com_example_nativeaudio_NativeAudio_getXcorrCount(JNIEnv* env, jclass clazz
 JNIEXPORT jintArray JNICALL
 Java_com_example_nativeaudio_NativeAudio_getReplyIndexes(JNIEnv* env, jclass clazz)
 {
-    jint out[3];
-    out[0] = replyIdx1;
-    out[1] = replyIdx2;
-    out[2] = replyIdx3;
-
+    jint out[100];
+    int i = 0;
+    int total_num = chirpsPlayed;
+    for(i = 0; i < 2*total_num; i++){
+        out[i] = recv_indexes[i];
+    }
     jintArray result;
-    result = (*env)->NewIntArray(env,3);
-    (*env)->SetIntArrayRegion(env, result, 0, 3, out);
+    result = (*env)->NewIntArray(env,2*total_num);
+    (*env)->SetIntArrayRegion(env, result, 0, 2*total_num, out);
 
     return result;
 }
@@ -1336,6 +1346,7 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
     speakerCounter=0;
     FS=fs;
     chirpsPlayed=0;
+    memset(recv_indexes, 0, 100*sizeof(int));
     forcewrite=JNI_FALSE;
     responder = reply;
     int bufferSize_mic = bSize_mic;
