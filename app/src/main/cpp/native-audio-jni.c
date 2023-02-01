@@ -717,11 +717,11 @@ void* xcorr_thread(void* context) {
                         if (cxt->timingOffset == 0) {
                             self_chirp_idx = global_xcorr_idx;
                             updateTimingOffset(global_xcorr_idx, local_xcorr_idx, cxt);
-                            next_segment_num = cxt->processedSegments + 25;
+                            next_segment_num = cxt->processedSegments + 5*10;
                         } else {
 //                            __android_log_print(ANDROID_LOG_VERBOSE,"speaker_debug","end time t %.3f", (double)clock()/CLOCKS_PER_SEC);
                             setReply(global_xcorr_idx, cxt);
-                            next_segment_num = cxt->processedSegments + 10;
+                            next_segment_num = cxt->processedSegments + 15;
                         }
 
                     }
@@ -759,14 +759,12 @@ void* xcorr_thread(void* context) {
                     if (cxt->timingOffset==0) {
                         self_chirp_idx = global_xcorr_idx;
                         updateTimingOffset(global_xcorr_idx,local_xcorr_idx,cxt);
-                        next_segment_num = cxt->processedSegments + 25;
+                        next_segment_num = cxt->processedSegments + 5*10;
                     }else{
                         __android_log_print(ANDROID_LOG_VERBOSE,"speaker_debug","end time t %.3f", (double)clock()/CLOCKS_PER_SEC);
                         setReply(global_xcorr_idx, cxt);
-                        next_segment_num = cxt->processedSegments + 10;
+                        next_segment_num = cxt->processedSegments + 15;
                     }
-
-
                 }
             } else if (local_xcorr_idx < 0 || naiser_out < 0) {
                 // occurs in the case of noise
