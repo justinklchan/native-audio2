@@ -629,8 +629,6 @@ void setReply(int idx, mycontext* cxt0) {
         receivedIdx = idx;
         replyIdx1 = idx - cxt0->timingOffset + cxt0->sendDelay;
 
-//        __android_log_print(ANDROID_LOG_VERBOSE,"speaker","replyidx %d %d",
-//                            replyIdx1,idx);
         if (replyIdx1 < cxt0->dataSize-cxt0->preamble_len-cxt0->bufferSize) {
             reply_ready = JNI_TRUE;
             cxt0->sendReply = JNI_FALSE;
@@ -649,8 +647,10 @@ void setReply(int idx, mycontext* cxt0) {
                 reply_ready=JNI_FALSE;
                 cxt0->sendReply=JNI_TRUE;
             }
+
         }
     }
+
 }
 
 // this method is called to record the microphone/speaker delay from the calibration signal
@@ -717,11 +717,11 @@ void* xcorr_thread(void* context) {
                         if (cxt->timingOffset == 0) {
                             self_chirp_idx = global_xcorr_idx;
                             updateTimingOffset(global_xcorr_idx, local_xcorr_idx, cxt);
-                            next_segment_num = cxt->processedSegments + 25;
+                            next_segment_num = cxt->processedSegments + 50;
                         } else {
 //                            __android_log_print(ANDROID_LOG_VERBOSE,"speaker_debug","end time t %.3f", (double)clock()/CLOCKS_PER_SEC);
                             setReply(global_xcorr_idx, cxt);
-                            next_segment_num = cxt->processedSegments + 10;
+                            next_segment_num = cxt->processedSegments + 20;
                         }
 
                     }
@@ -759,11 +759,11 @@ void* xcorr_thread(void* context) {
                     if (cxt->timingOffset==0) {
                         self_chirp_idx = global_xcorr_idx;
                         updateTimingOffset(global_xcorr_idx,local_xcorr_idx,cxt);
-                        next_segment_num = cxt->processedSegments + 25;
+                        next_segment_num = cxt->processedSegments + 50;
                     }else{
                         __android_log_print(ANDROID_LOG_VERBOSE,"speaker_debug","end time t %.3f", (double)clock()/CLOCKS_PER_SEC);
                         setReply(global_xcorr_idx, cxt);
-                        next_segment_num = cxt->processedSegments + 10;
+                        next_segment_num = cxt->processedSegments + 20;
                     }
 
 
@@ -1372,6 +1372,12 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
         PN_seq[3] = 1;
         PN_seq[4] = -1;
     }
+    else if(numSym == 4){
+        PN_seq[0] = 1;
+        PN_seq[1] = 1;
+        PN_seq[2] = -1;
+        PN_seq[3] = 1;
+    }
 
     reply_ready=JNI_FALSE;
     receivedIdx=-1;
@@ -1413,6 +1419,8 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
         cxt->initialDelay = initialDelay;
         cxt->refData=calloc(N_ref, sizeof(short));
         memcpy(cxt->refData,refData, N_ref*sizeof(short));
+//        char* str1 = getString_s(cxt->refData, cxt->preamble_len);
+//        int a = 1;
 
         // copy at beginning
         if (responder) {

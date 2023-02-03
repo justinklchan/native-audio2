@@ -367,6 +367,7 @@ public class NativeAudio extends AppCompatActivity
                     editor.putFloat("naiserShoulder", Float.parseFloat(ss));
                     editor.commit();
                     Constants.naiserShoulder = Float.parseFloat(ss);
+
                 }
             }
         });
@@ -388,6 +389,7 @@ public class NativeAudio extends AppCompatActivity
                     editor.putInt("user_id", Integer.parseInt(ss));
                     editor.commit();
                     Constants.user_id = Integer.parseInt(ss);
+                    Constants.loadData(NativeAudio.this);
                 }
             }
         });

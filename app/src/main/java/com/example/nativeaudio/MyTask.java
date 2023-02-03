@@ -181,7 +181,7 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
             int initialOffset = begin_gap + warmup_len + gap_len;
             int reply_delay = (int) (Constants.replyDelay * Constants.fs);
             if(Constants.reply){
-                reply_delay = (int) ((Constants.replyDelay + ((double)Constants.user_id)*0.27) * Constants.fs);
+                reply_delay = (int) ((Constants.replyDelay + ((double)Constants.user_id)*0.32) * Constants.fs);
             }
             if (!Constants.stop) {
                 short[] sig = new short[Constants.sig.length];
@@ -195,7 +195,7 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
                     sig[counter++]=(short)(s*Constants.vol);
                 }
                 // replyDelay for the sender dictates the period between transmitting chirps
-                NativeAudio.calibrate(sig, sig2, Constants.bufferSize_spk, Constants.bufferSize, Constants.recTime, topfilename, bottomfilename, meta_filename,
+                NativeAudio.calibrate(sig2, sig2, Constants.bufferSize_spk, Constants.bufferSize, Constants.recTime, topfilename, bottomfilename, meta_filename,
                         initialOffset, warmdown_len, Constants.sig.length, Constants.water,
                         Constants.reply, Constants.naiser, reply_delay, Constants.xcorrthresh,
                         Constants.minPeakDistance, Constants.fs, Constants.leader_pre1, Constants.leader_pre2, Constants.N0, Constants.CP,
