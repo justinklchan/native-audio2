@@ -155,6 +155,7 @@ public class NativeAudio extends AppCompatActivity
         Constants.et13 = (EditText)findViewById(R.id.editTextNumberDecimal5);
         Constants.et14 = (EditText)findViewById(R.id.editTextNumber9);
         Constants.et15 = (EditText)findViewById(R.id.editTextNumber);
+        Constants.et16 = (EditText)findViewById(R.id.editTextNumber16);
 
         Constants.tv = (TextView)findViewById(R.id.textView3);
         Constants.tv2 = (TextView)findViewById(R.id.textView4);
@@ -499,6 +500,27 @@ public class NativeAudio extends AppCompatActivity
             }
         });
 
+        Constants.et16.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(NativeAudio.this).edit();
+                String ss = Constants.et16.getText().toString();
+                if (Utils.isInteger(ss)) {
+                    editor.putInt("calibWait", Integer.parseInt(ss));
+                    editor.commit();
+                    Constants.calibWait = Integer.parseInt(ss);
+                }
+            }
+        });
+
         Constants.recButton.setOnClickListener(new OnClickListener() {
             public void onClick(View view) {
                 Constants.stop=false;
@@ -672,7 +694,7 @@ public class NativeAudio extends AppCompatActivity
                                         int fs,
                                         double[] naiserTx1, double[] naiserTx2, int N0, boolean CP, float naiserThresh, float naiserShoulder,
                                         int win_size, int bias, int seekback, double pthresh, int round, int filenum, boolean runxcorr, float initialDelay,
-                                        String mic_ts_fname, String speaker_ts_fname,int bigBufferSize,int bigBufferTimes, int numSym);
+                                        String mic_ts_fname, String speaker_ts_fname,int bigBufferSize,int bigBufferTimes, int numSym, int calibWait);
 
     public static native void testxcorr(double[] data, double[] refData, double[] refData2, int N0, boolean CP);
     public static native double[] getDistance(boolean reply);

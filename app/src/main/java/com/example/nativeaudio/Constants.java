@@ -26,10 +26,11 @@ public class Constants {
     public static int bufferSize,bigBufferSize,bigBufferTimes;
     public static boolean stop=false;
     public static boolean initsleeping=false;
-    static EditText et1,et2,et3,et4,et5,et6,et7,et8,et9,et10,et13,et14,et15; //et11,et12,
+    static EditText et1,et2,et3,et4,et5,et6,et7,et8,et9,et10,et13,et14,et15,et16; //et11,et12,
     public static NestedScrollView sview;
     static int fs=44100;
     static float naiserThresh=0.3f, naiserShoulder=0.8f;
+    static int calibWait=10;
     static int win_size=3600;
     static int bias=240;
     static int initSleep=0;
@@ -101,6 +102,7 @@ public class Constants {
         Constants.runxcorr=prefs.getBoolean("runxcorr",runxcorr);
         Constants.initialDelay=prefs.getFloat("initialDelay",initialDelay);
         Constants.user_id = prefs.getInt("user_id",user_id);
+        Constants.calibWait = prefs.getInt("calibWait",calibWait);
 
 
         et1.setText(vol+"");
@@ -116,6 +118,7 @@ public class Constants {
         et13.setText(pthresh+"");
         et14.setText(rounds+"");
         et15.setText(initialDelay+"");
+        et16.setText(calibWait+"");
         sw1.setChecked(water);
         sw2.setChecked(reply);
         sw3.setChecked(naiser);
@@ -168,6 +171,7 @@ public class Constants {
         Constants.et13.setEnabled(!Constants.et13.isEnabled());
         Constants.et14.setEnabled(!Constants.et14.isEnabled());
         Constants.et15.setEnabled(!Constants.et15.isEnabled());
+        Constants.et16.setEnabled(!Constants.et16.isEnabled());
     }
 
     public static void loadData(Context cxt) {

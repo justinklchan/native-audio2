@@ -151,6 +151,7 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
         short[] data = generateCalibrationSignal(Constants.sig, begin_gap, warmup_len, gap_len,warmdown_len);
 
         String dir = cxt.getExternalFilesDir(null).toString();
+        FileOperations.writetofile_str(av,Constants.user_id+"\n"+Constants.reply,Constants.tt+"/"+Constants.tt+"_role.txt");
 
 //        for (int k = 0; k < Constants.rounds; k++) {
 //            Log.e("asdf","START ROUND ");
@@ -201,7 +202,7 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
                         Constants.minPeakDistance, Constants.fs, Constants.leader_pre1, Constants.leader_pre2, Constants.N0, Constants.CP,
                         Constants.naiserThresh, Constants.naiserShoulder, Constants.win_size, Constants.bias,
                         Constants.seekback, Constants.pthresh, 0, Constants.fileID, Constants.runxcorr, Constants.initialDelay,
-                        mic_ts_filename,speaker_ts_filename,Constants.bigBufferSize,Constants.bigBufferTimes,Constants.numsym);
+                        mic_ts_filename,speaker_ts_filename,Constants.bigBufferSize,Constants.bigBufferTimes,Constants.numsym,Constants.calibWait);
 
                 try {
                     double sleepTimeInSeconds = .2;
