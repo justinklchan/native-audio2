@@ -148,6 +148,7 @@ typedef struct mycontext{
     JNIEnv *env;
     jclass clazz;
     int numSyms;
+    int calibWait;
 }mycontext;
 
 jboolean wroteToDisk=JNI_FALSE;
@@ -717,7 +718,7 @@ void* xcorr_thread(void* context) {
                         if (cxt->timingOffset == 0) {
                             self_chirp_idx = global_xcorr_idx;
                             updateTimingOffset(global_xcorr_idx, local_xcorr_idx, cxt);
-                            next_segment_num = cxt->processedSegments + 50;
+                            next_segment_num = cxt->processedSegments + 5*cxt->calibWait;
                         } else {
 //                            __android_log_print(ANDROID_LOG_VERBOSE,"speaker_debug","end time t %.3f", (double)clock()/CLOCKS_PER_SEC);
                             setReply(global_xcorr_idx, cxt);
@@ -759,7 +760,7 @@ void* xcorr_thread(void* context) {
                     if (cxt->timingOffset==0) {
                         self_chirp_idx = global_xcorr_idx;
                         updateTimingOffset(global_xcorr_idx,local_xcorr_idx,cxt);
-                        next_segment_num = cxt->processedSegments + 50;
+                        next_segment_num = cxt->processedSegments + 5*cxt->calibWait;
                     }else{
                         __android_log_print(ANDROID_LOG_VERBOSE,"speaker_debug","end time t %.3f", (double)clock()/CLOCKS_PER_SEC);
                         setReply(global_xcorr_idx, cxt);
@@ -1335,7 +1336,7 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
                                                    jint N0, jboolean CP, jfloat naiserThresh, jfloat naiserShoulder,
                                                    jint win_size, jint bias, jint seekback, jdouble pthresh, int round,
                                                    int filenum, jboolean runxcorr, jfloat initialDelay, jstring mic_ts_fname,
-                                                   jstring speaker_ts_fname, int bigBufferSize,int bigBufferTimes,int numSym) {
+                                                   jstring speaker_ts_fname, int bigBufferSize,int bigBufferTimes,int numSym, int calibWait) {
     freed=JNI_FALSE;
     timeOffsetUpdated=JNI_FALSE;
     int round0 = 0;
@@ -1415,6 +1416,7 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
         cxt->preamble_len = preamble_len;
         cxt->data=calloc(bufferSize_spk * totalSpeakerLoops, sizeof(short));
         cxt->initialDelay = initialDelay;
+        cxt->calibWait=calibWait;
         cxt->refData=calloc(N_ref, sizeof(short));
         memcpy(cxt->refData,refData, N_ref*sizeof(short));
 //        char* str1 = getString_s(cxt->refData, cxt->preamble_len);
@@ -1488,6 +1490,7 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
         memset(cxt2->bigdata,0,bufferSize_mic * 2 * totalRecorderLoops * sizeof(short));
         memset(cxt2->data,0,bufferSize_mic * totalRecorderLoops * sizeof(short));
     }
+    cxt2->calibWait=calibWait;
     cxt2->numSyms=numSym;
     cxt2->env = env;
     cxt2->clazz = clazz;
