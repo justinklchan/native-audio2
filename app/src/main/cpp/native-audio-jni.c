@@ -765,8 +765,6 @@ void* xcorr_thread(void* context) {
                         setReply(global_xcorr_idx, cxt);
                         next_segment_num = cxt->processedSegments + 20;
                     }
-
-
                 }
             } else if (local_xcorr_idx < 0 || naiser_out < 0) {
                 // occurs in the case of noise

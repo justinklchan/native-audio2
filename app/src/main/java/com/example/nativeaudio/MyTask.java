@@ -206,6 +206,7 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
                 try {
                     double sleepTimeInSeconds = .2;
                     int numberOfBuffers = (int)((Constants.recTime/sleepTimeInSeconds)+1);
+                    String logStr="";
                     for (int i = 0; i < numberOfBuffers; i++) {
 //                        Log.e("asdf","buffer "+i);
                         double[] vals = NativeAudio.getVal();
@@ -235,6 +236,10 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
                             arrayStr += ", ";
                             arrayStr += result[k+1];
                             arrayStr += "\n";
+                        }
+                        if (i == numberOfBuffers-1) {
+                            logStr += arrayStr;
+                            FileOperations.writetofile_str(av,logStr,Constants.tt+"/"+Constants.tt+"_replyidx.txt");
                         }
                         Utils.clear();
                         Utils.log(arrayStr);
@@ -293,7 +298,6 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
                     }
                     Constants.recordImu=false;
                     NativeAudio.forcewrite();
-
                     FileOperations.writeSensorsToDisk(av,Constants.tt+"");
 
                     NativeAudio.reset();

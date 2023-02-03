@@ -190,6 +190,46 @@ public class FileOperations {
         }.run();
     }
 
+    public static void writetofile_str(Activity av, String buff, String filename) {
+        new Thread() {
+            public void run() {
+                try {
+                    String dir = av.getExternalFilesDir(null).toString();
+                    writetofile_str(dir, buff, filename);
+                } catch (Exception e) {
+                    Log.e("asdf", e.toString());
+                }
+            }
+        }.run();
+    }
+
+    public static void writetofile_str(String _ExternalFilesDir, String buff, String filename) {
+        Log.e("asdf","writetofile " + filename + " "+(buff==null));
+        long ts = System.currentTimeMillis();
+
+        try {
+            String dir = _ExternalFilesDir;
+            File path = new File(dir);
+            if (!path.exists()) {
+                path.mkdirs();
+            }
+
+            File file = new File(dir, filename);
+
+            BufferedWriter buf = new BufferedWriter(new FileWriter(file,false));
+            buf.write(buff);
+//            for (int i = 0; i < buff.length; i++) {
+//                buf.append(""+buff[i]);
+//                buf.newLine();
+//            }
+            buf.flush();
+            buf.close();
+        } catch(Exception e) {
+            Log.e("asdf","write to file exception " +e.toString());
+        }
+        Log.e("asdf","finish writing "+filename + (System.currentTimeMillis()-ts));
+    }
+
     public static void writetofile(String _ExternalFilesDir, short[] buff, String filename) {
         Log.e("asdf","writetofile " + filename + " "+(buff==null));
         long ts = System.currentTimeMillis();
