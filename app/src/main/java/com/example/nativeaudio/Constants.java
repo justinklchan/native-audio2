@@ -59,9 +59,9 @@ public class Constants {
     static float pthresh=.65f;
     static int rounds = 1;
     static float initialDelay = 3f;
-    static float bufSizeInSeconds=.2f;
+    static float bufSizeInSeconds=.25f;
     static int bufferSize_spk=960*2;
-    static float bigBufferSizeInSeconds = .2f;
+    static float bigBufferSizeInSeconds = .25f;
     static ConstraintLayout clayout;
 
     static ArrayList<Long> time_acc,time_gyro,time_acc_uncalib,time_gyro_uncalib,time_mag,time_mag_uncalib,time_pressure,time_linear_acc,time_rot;

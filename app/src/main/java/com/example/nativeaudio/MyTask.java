@@ -180,6 +180,7 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
             String speaker_ts_filename = dir  + "/"+Constants.tt+ "/" + Constants.tt + "-" + Constants.fileID + "-speaker_ts.txt";
 
             int initialOffset = begin_gap + warmup_len + gap_len;
+            int init_delay = (int)(Constants.replyDelay * Constants.fs);
             int reply_delay = (int) (Constants.replyDelay * Constants.fs);
             if(Constants.reply){
                 reply_delay = (int) ((Constants.replyDelay + ((double)Constants.user_id)*0.32) * Constants.fs);
@@ -199,9 +200,9 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
                 NativeAudio.calibrate(sig2, sig2, Constants.bufferSize_spk, Constants.bufferSize, Constants.recTime, topfilename, bottomfilename, meta_filename,
                         initialOffset, warmdown_len, Constants.sig.length, Constants.water,
                         Constants.reply, Constants.naiser, reply_delay, Constants.xcorrthresh,
-                        Constants.minPeakDistance, Constants.fs, Constants.leader_pre1, Constants.leader_pre2, Constants.N0, Constants.CP,
+                        Constants.minPeakDistance, Constants.fs, Constants.leader_pre1, Constants.leader_pre2, Constants.Ns, Constants.N0, Constants.CP,
                         Constants.naiserThresh, Constants.naiserShoulder, Constants.win_size, Constants.bias,
-                        Constants.seekback, Constants.pthresh, 0, Constants.fileID, Constants.runxcorr, Constants.initialDelay,
+                        Constants.seekback, Constants.pthresh, 0, Constants.fileID, Constants.runxcorr, init_delay,
                         mic_ts_filename,speaker_ts_filename,Constants.bigBufferSize,Constants.bigBufferTimes,Constants.numsym,Constants.calibWait);
 
                 try {
@@ -232,10 +233,12 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
 //                        Log.e("debug2",NativeAudio.getXcorrCount()+" "+ NativeAudio.replySet());
                         int[] result = NativeAudio.getReplyIndexes();
                         String arrayStr="";
-                        for(int k = 0; k < result.length; k = k+2) {
+                        for(int k = 0; k < result.length; k = k+3) {
                             arrayStr += result[k];
                             arrayStr += ", ";
                             arrayStr += result[k+1];
+                            arrayStr += ", ";
+                            arrayStr += result[k+2];
                             arrayStr += "\n";
                         }
                         if (i == numberOfBuffers-1) {
