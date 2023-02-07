@@ -125,7 +125,12 @@ public class NativeAudio extends AppCompatActivity
         getSupportActionBar().hide();
         NativeAudio.createEngine();
         NativeAudio.createBufferQueueAudioPlayer(Constants.fs, Constants.bufferSize);
-        NativeAudio.createAudioRecorder();
+        int micInterface = 0;
+        if (Build.MODEL.equals("IN2020")) {
+            micInterface=1;
+        }
+        Log.e("interface",micInterface+"");
+        NativeAudio.createAudioRecorder(micInterface);
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
@@ -680,7 +685,7 @@ public class NativeAudio extends AppCompatActivity
     /** Native methods, implemented in jni folder */
     public static native void createEngine();
     public static native void createBufferQueueAudioPlayer(int sampleRate, int samplesPerBuf);
-    public static native boolean createAudioRecorder();
+    public static native boolean createAudioRecorder(int micInterface);
     public static native void stopit();
     public static native void reset();
     public static native void forcewrite();
