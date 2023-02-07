@@ -2064,7 +2064,7 @@ int corr2(int N, int xcorr_idx, double* filteredData, mycontext* cxt2, int globa
 //        __android_log_print(ANDROID_LOG_VERBOSE, "debug2","naiser_threshold %d %d %.2f",cxt->responder,cxt->timingOffset,cxt2->naiserThresh);
         //__android_log_print(ANDROID_LOG_VERBOSE,"speaker_debug","naiser_sig begin");
         if(cxt2->responder && cxt2->timingOffset == 0){
-            naiser_idx = naiser_corr(naiser_sig, Nrx, Nu, N0, 16, !CP, 0.6, cxt2->naiserShoulder,cxt2->numSyms);
+            naiser_idx = naiser_corr(naiser_sig, Nrx, Nu, N0, 16, !CP, 0.45, cxt2->naiserShoulder,cxt2->numSyms);
         }else{
             naiser_idx = naiser_corr(naiser_sig, Nrx, Nu, N0, 16, !CP, cxt2->naiserThresh, cxt2->naiserShoulder,cxt2->numSyms);
         }
