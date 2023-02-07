@@ -1013,6 +1013,7 @@ void bqRecorderCallback(SLAndroidSimpleBufferQueueItf bq, void *context)
             }
             counter+=2;
         }
+        __android_log_print(ANDROID_LOG_VERBOSE, "maxval", "%d %d",maxval1,maxval2);
         if (maxval1 > maxval2) {
             cxt->recorder_offset = 0;
         }
@@ -1310,7 +1311,7 @@ Java_com_example_nativeaudio_NativeAudio_createBufferQueueAudioPlayer(JNIEnv* en
 // create audio recorder: recorder is not in fast path
 //    like to avoid excessive re-sampling while playing back from Hello & Android clip
 JNIEXPORT jboolean JNICALL
-Java_com_example_nativeaudio_NativeAudio_createAudioRecorder(JNIEnv* env, jclass clazz)
+Java_com_example_nativeaudio_NativeAudio_createAudioRecorder(JNIEnv* env, jclass clazz, jint micInterface)
 {
 //    __android_log_print(ANDROID_LOG_VERBOSE, "debug", "start recorder setup");
 
@@ -1358,8 +1359,14 @@ Java_com_example_nativeaudio_NativeAudio_createAudioRecorder(JNIEnv* env, jclass
                            &inputConfig);
 
     if (SL_RESULT_SUCCESS == result) {
-        SLuint32 presetValue = SL_ANDROID_RECORDING_PRESET_CAMCORDER;
-//        SLuint32 presetValue = SL_ANDROID_RECORDING_PRESET_VOICE_RECOGNITION;
+        SLuint32 presetValue = 0;
+        if (micInterface == 0) {
+            presetValue = SL_ANDROID_RECORDING_PRESET_CAMCORDER;
+        }
+        else if (micInterface == 1) {
+            presetValue = SL_ANDROID_RECORDING_PRESET_UNPROCESSED;
+        }
+        __android_log_print(ANDROID_LOG_VERBOSE, "maxval", "preset");
         (*inputConfig)
                 ->SetConfiguration(inputConfig, SL_ANDROID_KEY_RECORDING_PRESET,
                                    &presetValue, sizeof(SLuint32));
