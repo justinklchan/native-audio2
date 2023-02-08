@@ -183,7 +183,7 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
             int init_delay = (int)(Constants.replyDelay * Constants.fs);
             int reply_delay = (int) (Constants.replyDelay * Constants.fs);
             if(Constants.reply){
-                reply_delay = (int) ((Constants.replyDelay + ((double)Constants.user_id)*0.32) * Constants.fs);
+                reply_delay = (int) ((Constants.replyDelay + ((double)Constants.user_id)*0.36) * Constants.fs);
             }
             if (!Constants.stop) {
                 short[] sig = new short[Constants.sig.length];
@@ -200,7 +200,7 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
                 NativeAudio.calibrate(sig2, sig2, Constants.bufferSize_spk, Constants.bufferSize, Constants.recTime, topfilename, bottomfilename, meta_filename,
                         initialOffset, warmdown_len, Constants.sig.length, Constants.water,
                         Constants.reply, Constants.naiser, reply_delay, Constants.xcorrthresh,
-                        Constants.minPeakDistance, Constants.fs, Constants.leader_pre1, Constants.leader_pre2, Constants.Ns, Constants.N0, Constants.CP,
+                        Constants.minPeakDistance, Constants.fs, Constants.leader_pre1, Constants.leader_pre2, Constants.Ns, Constants.N0, Constants.CP, Constants.N_FSK,
                         Constants.naiserThresh, Constants.naiserShoulder, Constants.win_size, Constants.bias,
                         Constants.seekback, Constants.pthresh, 0, Constants.fileID, Constants.runxcorr, init_delay,
                         mic_ts_filename,speaker_ts_filename,Constants.bigBufferSize,Constants.bigBufferTimes,Constants.numsym,Constants.calibWait);

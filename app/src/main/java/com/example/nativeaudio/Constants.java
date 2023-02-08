@@ -43,6 +43,7 @@ public class Constants {
     static int recTime=30;
     static int N0;
     static int Ns;
+    static int N_FSK;
     static boolean CP;
     static TextView tv,tv2,distOut,debugPane,tv11;
     static Switch sw1,sw2,sw3,sw4;
@@ -540,6 +541,7 @@ public class Constants {
             txt=" seq5_FSK_1_480_1000_5000";
             N0 = 540;
             Ns = 1920;
+            N_FSK = 1920;
             CP = false;
             numsym=4;
             leader_sig=FileOperations.readrawasset_binary(cxt, R.raw.seq5_fsk_0_1920_540_1000_5000);
@@ -613,6 +615,95 @@ public class Constants {
             }
             else if(Constants.user_id == 4){
                 sig=FileOperations.readrawasset_binary(cxt, R.raw.seq5_fsk_5_1920_540_1000_5000);
+                pre1 = new double[Ns];
+                pre2 = new double[sig.length];
+
+                for (int i = 0; i < Ns; i++) {
+                    pre1[i]=sig[i+N0]/31000;
+                }
+                for (int i = 0; i < pre2.length; i++) {
+                    pre2[i]=sig[i]/31000.0;
+                }
+            }
+        }
+        else if (Constants.fileID==6) {
+            txt=" seq5_FSK_1_480_1000_5000";
+            N0 = 540;
+            Ns = 1920;
+            N_FSK = 2720;
+            CP = false;
+            numsym=4;
+            leader_sig=FileOperations.readrawasset_binary(cxt, R.raw.seq5_fsk_0_1920_540_2720_1000_2720);
+            leader_pre1 =new double[Ns];
+            for (int i = 0; i < Ns; i++) {
+                leader_pre1[i]=leader_sig[i+N0]/31000.0;
+            }
+            leader_pre2 = new double[numsym*(Ns + N0)];
+            for (int i = 0; i < leader_pre2.length; i++) {
+                leader_pre2[i]=leader_sig[i]/31000.0;
+            }
+
+            if(!Constants.reply) {
+                sig=FileOperations.readrawasset_binary(cxt, R.raw.seq5_fsk_0_1920_540_2720_1000_2720);
+                pre1 = new double[Ns];
+                for (int i = 0; i < Ns; i++) {
+                    pre1[i] = leader_pre1[i]/31000;
+                }
+                pre2 = new double[leader_pre2.length];
+                for (int i = 0; i < leader_pre2.length; i++) {
+                    pre2[i] = leader_pre2[i]/31000.0;
+                }
+            }
+            else if(Constants.user_id == 0){
+                sig=FileOperations.readrawasset_binary(cxt, R.raw.seq5_fsk_2_1920_540_2720_1000_2720);
+                pre1 = new double[Ns];
+                pre2 = new double[sig.length];
+
+                for (int i = 0; i < Ns; i++) {
+                    pre1[i]=sig[i+N0]/31000;
+                }
+                for (int i = 0; i < pre2.length; i++) {
+                    pre2[i]=sig[i]/31000.0;
+                }
+            }
+            else if(Constants.user_id == 1){
+                sig =FileOperations.readrawasset_binary(cxt, R.raw.seq5_fsk_4_1920_540_2720_1000_2720);
+                pre1 = new double[Ns];
+                pre2 = new double[sig.length];
+
+                for (int i = 0; i < Ns; i++) {
+                    pre1[i]=sig[i+N0]/31000;
+                }
+                for (int i = 0; i < pre2.length; i++) {
+                    pre2[i]=sig[i]/31000.0;
+                }
+            }
+            else if(Constants.user_id == 2){
+                sig=FileOperations.readrawasset_binary(cxt, R.raw.seq5_fsk_6_1920_540_2720_1000_2720);
+                pre1 = new double[Ns];
+                pre2 = new double[sig.length];
+
+                for (int i = 0; i < Ns; i++) {
+                    pre1[i]=sig[i+N0]/31000;
+                }
+                for (int i = 0; i < pre2.length; i++) {
+                    pre2[i]=sig[i]/31000.0;
+                }
+            }
+            else if(Constants.user_id == 3){
+                sig=FileOperations.readrawasset_binary(cxt, R.raw.seq5_fsk_8_1920_540_2720_1000_2720);
+                pre1 = new double[Ns];
+                pre2 = new double[sig.length];
+
+                for (int i = 0; i < Ns; i++) {
+                    pre1[i]=sig[i+N0]/31000;
+                }
+                for (int i = 0; i < pre2.length; i++) {
+                    pre2[i]=sig[i]/31000.0;
+                }
+            }
+            else if(Constants.user_id == 4){
+                sig=FileOperations.readrawasset_binary(cxt, R.raw.seq5_fsk_10_1920_540_2720_1000_2720);
                 pre1 = new double[Ns];
                 pre2 = new double[sig.length];
 

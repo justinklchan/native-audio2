@@ -128,6 +128,7 @@ typedef struct mycontext{
     jfloat xcorrthresh;
     jint Ns;
     jint N0;
+    jint N_FSK;
     jboolean CP;
     jfloat naiserThresh;
     jfloat naiserShoulder;
@@ -208,17 +209,10 @@ int last_chirp_idx=-1;
 double chirp_indexes[5] = {-1,-1,-1,-1,-1};
 // short PN_seq[7] = {1, 1, 1, -1, 1, -1, -1};
 //PN_seq[5] = [1, 1, -1, 1, -1];
-
+int fre_idx[6][18] = {0};
+int N_fre = 18;
 
 short PN_seq[7] = {0};
-int fre_idx[6][18] = {
-        {60, 68, 76, 84, 92, 100, 108, 116, 124, 132, 140, 148, 156, 164, 172, 180, 188, 196 },
-        {61, 69, 77, 85, 93, 101, 109, 117, 125, 133, 141, 149, 157, 165, 173, 181, 189, 197  },
-        {62, 70, 78, 86, 94, 102, 110, 118, 126, 134, 142, 150, 158, 166, 174, 182, 190, 198 },
-        {63, 71, 79, 87, 95, 103, 111, 119, 127, 135, 143, 151, 159, 167, 175, 183, 191, 199  },
-        {64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200  },
-        {65, 73, 81, 89, 97, 105, 113, 121, 129, 137, 145, 153, 161, 169, 177, 185, 193, 201  }
-};
 
 
 int lastidx=0;
@@ -389,21 +383,27 @@ int check_user_id(short* sig, unsigned long int sig_len){
     int middle_idx = 0;
     int tmp_sum = 0;
     double ratio = 0;
+    int nearby = 7;
+    if(N_fre == 18){
+        nearby = 7;
+    }else{
+        nearby = 12;
+    }
     for(i = 0; i < 6; ++i){
         snr = 0;
-        for(j = 0; j < 18; ++j){
+        for(j = 0; j < N_fre; ++j){
             middle_idx = fre_idx[i][j] - 1;
             tmp_sum = 0;
-            for(k = middle_idx - 7; k < middle_idx; k++){
+            for(k = middle_idx - nearby; k < middle_idx; k++){
                 tmp_sum += result[k];
             }
-            for(k = middle_idx + 1; k < middle_idx + 8; k++){
+            for(k = middle_idx + 1; k < middle_idx + nearby+1; k++){
                 tmp_sum += result[k];
             }
-            ratio = result[middle_idx]/(tmp_sum/14.0);
+            ratio = result[middle_idx]/(tmp_sum/(nearby*2.0));
             snr += magnitude_to_decibels(ratio);
         }
-        snr = snr/18;
+        snr = snr/N_fre;
         if(snr > max_snr){
             max_snr = snr;
             max_user = i;
@@ -728,9 +728,9 @@ void setReply(int idx, mycontext* cxt0, int user_id) {
     __android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "setReply at %.3f", (double)(t0)/CLOCKS_PER_SEC);
     if (cxt0->responder && idx > FS && idx-replyIdx1 >= FS/4) {
         receivedIdx = idx;
-        int max_user = 6;
+        int max_user = 5;
         int init_delay = cxt0->initialDelay;
-        int each_delay = (int)(0.32*FS);
+        int each_delay = (int)(0.36*FS);
         if(user_id <= 0 ){
             replyIdx1 = idx - cxt0->timingOffset + cxt0->sendDelay;
         }else{
@@ -751,7 +751,7 @@ void setReply(int idx, mycontext* cxt0, int user_id) {
 
             if (reply_ready && replyIdx1 >= 0) {
                 pthread_mutex_lock(&speaker_mutex);
-                __android_log_print(ANDROID_LOG_VERBOSE,"speaker_debug","Write to speaker buffer from %d to %d: %d, %d, %d", replyIdx1, replyIdx1+cxt->preamble_len, idx, cxt0->timingOffset, cxt0->sendDelay);
+                __android_log_print(ANDROID_LOG_VERBOSE,"speaker_debug","Write to speaker buffer from %d to %d: %d, %d, speaker offset %d", replyIdx1, replyIdx1+cxt->preamble_len, idx, cxt0->timingOffset, cxt->playOffset);
                 memcpy(cxt->data + replyIdx1, cxt->refData, cxt->preamble_len*sizeof(short));
                 pthread_mutex_unlock(&speaker_mutex);
                 reply_ready=JNI_FALSE;
@@ -797,7 +797,7 @@ void* xcorr_thread(void* context) {
 
         if(cxt->waitforFSK && cxt->processedSegments > 0){
             //__android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "if condition 1 before userid");
-            user_id = check_user_id(cxt->data + last_chirp_idx + cxt->numSyms*(cxt->N0 + cxt->Ns) + cxt->N0 + 100, cxt->Ns);
+            user_id = check_user_id(cxt->data + last_chirp_idx + cxt->numSyms*(cxt->N0 + cxt->Ns) + cxt->N0 + 150, cxt->N_FSK);
             //__android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "if condition 1 after userid");
             cxt->waitforFSK = JNI_FALSE;
             setReply(last_chirp_idx, cxt, user_id);
@@ -824,7 +824,7 @@ void* xcorr_thread(void* context) {
 
                 jboolean c1 = cxt->processedSegments > 0 && local_xcorr_idx - cxt->bigBufferSize  >= 1000;
                 jboolean c2 = cxt->processedSegments > 0 && local_xcorr_idx - cxt->bigBufferSize  >= 1000;
-                jboolean needwaitFSK = cxt->processedSegments > 0 && local_xcorr_idx + (cxt->numSyms + 1)*(cxt->N0 + cxt->Ns) + 200 >= 2*cxt->bigBufferSize;
+                jboolean needwaitFSK = cxt->processedSegments > 0 && local_xcorr_idx + (cxt->numSyms)*(cxt->N0 + cxt->Ns) + cxt->N0  + cxt->N_FSK + 200 >= 2*cxt->bigBufferSize;
 
                 if ((c1 || c2)) {
                     __android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "get one more flag set to true");
@@ -851,9 +851,9 @@ void* xcorr_thread(void* context) {
                             __android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "get one more chunk for FSK debuging");
                             cxt->waitforFSK = JNI_TRUE;
                         }else{
-                            user_id = check_user_id(cxt->data + global_xcorr_idx + cxt->numSyms*(cxt->N0 + cxt->Ns) + cxt->N0 + 100, cxt->Ns);
+                            user_id = check_user_id(cxt->data + global_xcorr_idx + cxt->numSyms*(cxt->N0 + cxt->Ns) + cxt->N0 + 150, cxt->N_FSK);
                             setReply(global_xcorr_idx, cxt, user_id);
-                            next_segment_num = cxt->processedSegments + 4*4;
+                            next_segment_num = cxt->processedSegments + 4*4 + 2;
                         }
 
 
@@ -879,7 +879,7 @@ void* xcorr_thread(void* context) {
 
             local_xcorr_idx = result[0];
             int naiser_out = result[2];
-            jboolean needwaitFSK = cxt->processedSegments > 0 && local_xcorr_idx + cxt->numSyms*(cxt->N0 + cxt->Ns) + 200 >= 2*cxt->bigBufferSize;
+            jboolean needwaitFSK = cxt->processedSegments > 0 && local_xcorr_idx + (cxt->numSyms)*(cxt->N0 + cxt->Ns) + cxt->N0  + cxt->N_FSK + 200 >= 2*cxt->bigBufferSize;
             if (local_xcorr_idx >= 0 && naiser_out >= 0) {
                 global_xcorr_idx = result[0]+globalOffset;
 
@@ -897,9 +897,9 @@ void* xcorr_thread(void* context) {
                         __android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "get one more chunk for FSK debuging");
                         cxt->waitforFSK = JNI_TRUE;
                     }else{
-                        user_id = check_user_id(cxt->data + global_xcorr_idx + cxt->numSyms*(cxt->N0 + cxt->Ns) + cxt->N0 + 100, cxt->Ns);
+                        user_id = check_user_id(cxt->data + global_xcorr_idx + cxt->numSyms*(cxt->N0 + cxt->Ns) + cxt->N0 + 150, cxt->N_FSK);
                         setReply(global_xcorr_idx, cxt, user_id);
-                        next_segment_num = cxt->processedSegments + 4*4;
+                        next_segment_num = cxt->processedSegments + 4*4 + 2;
                     }
 
                 }
@@ -914,7 +914,7 @@ void* xcorr_thread(void* context) {
 
     }
     cxt->processedSegments+=1;
-    __android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "thread finish");
+//    __android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "thread finish");
 }
 
 double getdist(int earier_chirp_idx, int later_chirp_index,int delay,int dtx,int drx, double speed) {
@@ -1481,7 +1481,8 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
                                                    jint tempSendDelay, jfloat xcorrthresh, jfloat minPeakDistance,
                                                    jint fs,
                                                    jdoubleArray tnaiserTx1, jdoubleArray tnaiserTx2,
-                                                   jint Ns, jint N0, jboolean CP, jfloat naiserThresh, jfloat naiserShoulder,
+                                                   jint Ns, jint N0, jboolean CP, jint N_FSK,
+                                                   jfloat naiserThresh, jfloat naiserShoulder,
                                                    jint win_size, jint bias, jint seekback, jdouble pthresh, int round,
                                                    int filenum, jboolean runxcorr, jint initialDelay, jstring mic_ts_fname,
                                                    jstring speaker_ts_fname, int bigBufferSize,int bigBufferTimes,int numSym, int calibWait) {
@@ -1525,6 +1526,43 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
         PN_seq[2] = -1;
         PN_seq[3] = 1;
     }
+
+    if(N_FSK == 1920){
+        N_fre = 18;
+        int tmp[6][18] =
+        {
+            {60, 68, 76, 84, 92, 100, 108, 116, 124, 132, 140, 148, 156, 164, 172, 180, 188, 196 },
+            {61, 69, 77, 85, 93, 101, 109, 117, 125, 133, 141, 149, 157, 165, 173, 181, 189, 197  },
+            {62, 70, 78, 86, 94, 102, 110, 118, 126, 134, 142, 150, 158, 166, 174, 182, 190, 198 },
+            {63, 71, 79, 87, 95, 103, 111, 119, 127, 135, 143, 151, 159, 167, 175, 183, 191, 199  },
+            {64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200  },
+            {65, 73, 81, 89, 97, 105, 113, 121, 129, 137, 145, 153, 161, 169, 177, 185, 193, 201  }
+        };
+        for(int i = 0; i < 6 ; ++i){
+            for(int  j = 0 ; j < N_fre; ++j){
+                fre_idx[i][j] =tmp[i][j];
+            }
+        }
+    }
+    else{
+        N_fre = 16;
+        int tmp[6][16] =
+        {
+                {71,85,99,113,127,141,155,169,183,197,211,225,239,253,267,281 },
+                {73,87,101,115,129,143,157,171,185,199,213,227,241,255,269,283},
+                {75,89,103,117,131,145,159,173,187,201,215,229,243,257,271,285},
+                {77,91,105,119,133,147,161,175,189,203,217,231,245,259,273,287 },
+                {79,93,107,121,135,149,163,177,191,205,219,233,247,261,275,289 },
+                {81,95,109,123,137,151,165,179,193,207,221,235,249,263,277,291 }
+        };
+        for(int i = 0; i < 6 ; ++i){
+            for(int  j = 0 ; j < N_fre; ++j){
+                fre_idx[i][j] =tmp[i][j];
+            }
+        }
+    }
+
+
 
     reply_ready=JNI_FALSE;
     receivedIdx=-1;
@@ -1603,6 +1641,7 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
     cxt->env = env;
     cxt->clazz = clazz;
     cxt->Ns=Ns;
+    cxt->N_FSK=N_FSK;
     cxt->N0=N0;
 
 //    __android_log_print(ANDROID_LOG_VERBOSE, "debug", "populate cxt");
@@ -1673,6 +1712,7 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
     cxt2->naiserThresh=naiserThresh;
     cxt2->naiserShoulder=naiserShoulder;
     cxt2->Ns=Ns;
+    cxt2->N_FSK=N_FSK;
     cxt2->N0=N0;
     cxt2->CP=CP;
     cxt2->win_size=win_size;
