@@ -728,9 +728,9 @@ void setReply(int idx, mycontext* cxt0, int user_id) {
     __android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "setReply at %.3f", (double)(t0)/CLOCKS_PER_SEC);
     if (cxt0->responder && idx > FS && idx-replyIdx1 >= FS/4) {
         receivedIdx = idx;
-        int max_user = 5;
+        int max_user = 6;
         int init_delay = cxt0->initialDelay;
-        int each_delay = (int)(0.36*FS);
+        int each_delay = (int)(0.32*FS);
         if(user_id <= 0 ){
             replyIdx1 = idx - cxt0->timingOffset + cxt0->sendDelay;
         }else{

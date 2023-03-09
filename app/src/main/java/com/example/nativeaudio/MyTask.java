@@ -183,7 +183,7 @@ public class MyTask extends AsyncTask<Void, Void, Void> {
             int init_delay = (int)(Constants.replyDelay * Constants.fs);
             int reply_delay = (int) (Constants.replyDelay * Constants.fs);
             if(Constants.reply){
-                reply_delay = (int) ((Constants.replyDelay + ((double)Constants.user_id)*0.36) * Constants.fs);
+                reply_delay = (int) ((Constants.replyDelay + ((double)Constants.user_id)*0.32) * Constants.fs);
             }
             if (!Constants.stop) {
                 short[] sig = new short[Constants.sig.length];

@@ -536,9 +536,21 @@ public class Constants {
                     pre2[i]=sig[i]/31000.0;
                 }
             }
+            else if(Constants.user_id == 5){
+                sig=FileOperations.readrawasset_binary(cxt, R.raw.seq5_fsk_6_1920_540_1000_5000);
+                pre1 = new double[Ns];
+                pre2 = new double[sig.length];
+
+                for (int i = 0; i < Ns; i++) {
+                    pre1[i]=sig[i+N0]/31000;
+                }
+                for (int i = 0; i < pre2.length; i++) {
+                    pre2[i]=sig[i]/31000.0;
+                }
+            }
         }
         else if (Constants.fileID==5) {
-            txt=" seq5_FSK_1_480_1000_5000";
+            txt=" seq5_FSK_1920_540_1000_5000";
             N0 = 540;
             Ns = 1920;
             N_FSK = 1920;
@@ -615,6 +627,18 @@ public class Constants {
             }
             else if(Constants.user_id == 4){
                 sig=FileOperations.readrawasset_binary(cxt, R.raw.seq5_fsk_5_1920_540_1000_5000);
+                pre1 = new double[Ns];
+                pre2 = new double[sig.length];
+
+                for (int i = 0; i < Ns; i++) {
+                    pre1[i]=sig[i+N0]/31000;
+                }
+                for (int i = 0; i < pre2.length; i++) {
+                    pre2[i]=sig[i]/31000.0;
+                }
+            }
+            else if(Constants.user_id == 5){
+                sig=FileOperations.readrawasset_binary(cxt, R.raw.seq5_fsk_6_1920_540_1000_5000);
                 pre1 = new double[Ns];
                 pre2 = new double[sig.length];
 
