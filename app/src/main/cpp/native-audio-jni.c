@@ -826,7 +826,7 @@ void* xcorr_thread(void* context) {
                 jboolean c2 = cxt->processedSegments > 0 && local_xcorr_idx - cxt->bigBufferSize  >= 1000;
                 jboolean needwaitFSK = cxt->processedSegments > 0 && local_xcorr_idx + (cxt->numSyms)*(cxt->N0 + cxt->Ns) + cxt->N0  + cxt->N_FSK + 200 >= 2*cxt->bigBufferSize;
 
-                if ((c1 || c2)) {
+                if ((c1 || c2)) { // wait for next chunk
                     __android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "get one more flag set to true");
                     cxt->getOneMoreFlag = JNI_TRUE;
                 }
@@ -844,7 +844,7 @@ void* xcorr_thread(void* context) {
                     if (cxt->timingOffset == 0) {
                         self_chirp_idx = global_xcorr_idx;
                         updateTimingOffset(global_xcorr_idx, local_xcorr_idx, cxt);
-                        next_segment_num = cxt->processedSegments + 4*cxt->calibWait;
+                        next_segment_num = cxt->processedSegments + 4*cxt->calibWait; //calibWait is avoid others' calibrate signal affects it
                     } else{
 //                           __android_log_print(ANDROID_LOG_VERBOSE,"speaker_debug","end time t %.3f", (double)clock()/CLOCKS_PER_SEC);
                         if(needwaitFSK){
@@ -864,7 +864,7 @@ void* xcorr_thread(void* context) {
             free(result);
 
         }
-        else if(cxt->processedSegments > 0) {// not wait for one more flag
+        else if(cxt->processedSegments > 0) {//  wait for one more flag
             // look back half a second
             int globalOffset = (cxt->processedSegments-1) * (cxt->bigBufferSize);
 
@@ -916,6 +916,142 @@ void* xcorr_thread(void* context) {
     cxt->processedSegments+=1;
 //    __android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "thread finish");
 }
+
+
+void* xcorr_thread2(void* context) {
+    mycontext* cxt = (mycontext*)context;
+    clock_t t0 = clock();
+    __android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "thread created %d at %.3f", cxt->processedSegments, (double)(t0)/CLOCKS_PER_SEC);
+
+    if (cxt->runXcorr && cxt->processedSegments >= next_segment_num) {
+        int global_xcorr_idx=-1;
+        int local_xcorr_idx=-1;
+        int user_id = -1;
+
+        if(cxt->waitforFSK && cxt->processedSegments > 0){
+            //__android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "if condition 1 before userid");
+            user_id = check_user_id(cxt->data + last_chirp_idx + cxt->numSyms*(cxt->N0 + cxt->Ns) + cxt->N0 + 150, cxt->N_FSK);
+            //__android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "if condition 1 after userid");
+            cxt->waitforFSK = JNI_FALSE;
+            setReply(last_chirp_idx, cxt, user_id);
+            next_segment_num = cxt->processedSegments + 4*4 - 1;
+        }
+        else if (!cxt->getOneMoreFlag && cxt->processedSegments > 0) { // not wait for one more flag
+            int globalOffset=0;
+            short *data = cxt->data + (cxt->bigBufferSize * (cxt->processedSegments - 1));
+
+            globalOffset = (cxt->processedSegments - 1) * cxt->bigBufferSize;
+            clock_t t0 = clock();
+//            __android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "if condition 2 before xcorr");
+            int *result = xcorr_helper2(context, data, globalOffset, cxt->bigBufferSize * 2);
+//            __android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "if condition 2 after xcorr");
+            clock_t t1 = clock();
+
+            __android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "return idx in phase 1 %d to %d, %d, with time %.3f",  result[0], result[1], result[2], (double)(t1 - t0)/CLOCKS_PER_SEC );
+            local_xcorr_idx = result[0];
+            int naiser_idx = result[2];
+
+            if (local_xcorr_idx >= 0 && naiser_idx >= 0) {
+                int synclag = cxt->seekback;
+                __android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "judge if need one more %d, %d",  local_xcorr_idx, cxt->bigBufferSize);
+
+                jboolean c1 = cxt->processedSegments > 0 && local_xcorr_idx - cxt->bigBufferSize  >= 1000;
+                jboolean c2 = cxt->processedSegments > 0 && local_xcorr_idx - cxt->bigBufferSize  >= 1000;
+                jboolean needwaitFSK = cxt->processedSegments > 0 && local_xcorr_idx + (cxt->numSyms)*(cxt->N0 + cxt->Ns) + cxt->N0  + cxt->N_FSK + 200 >= 2*cxt->bigBufferSize;
+
+                if ((c1 || c2)) { // wait for next chunk
+                    __android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "get one more flag set to true");
+                    cxt->getOneMoreFlag = JNI_TRUE;
+                }
+                else {
+                    global_xcorr_idx = result[0] + globalOffset;
+//                    if (xcorr_counter < 5) {
+//                        //                        __android_log_print(ANDROID_LOG_VERBOSE, "chirp", "got chirp1 %d %d %d",xcorr_counter,global_xcorr_idx,naiser_idx);
+//                        chirp_indexes[xcorr_counter++] = global_xcorr_idx;
+//                        lastidx = global_xcorr_idx;
+//                    }
+                    last_chirp_idx = global_xcorr_idx;
+                    __android_log_print(ANDROID_LOG_VERBOSE,"speaker_debug","detect leader chirp in phase 1 = %d, and local_idx=%d, tolerance = %d", global_xcorr_idx, local_xcorr_idx, 2*cxt->bigBufferSize - cxt->numSyms*(cxt->N0 + cxt->Ns) - 200);
+
+//                    __android_log_print(ANDROID_LOG_VERBOSE,"speaker_debug","detect leader chirp in phase 1 = %d", global_xcorr_idx);
+                    if (cxt->timingOffset == 0) {
+                        self_chirp_idx = global_xcorr_idx;
+                        updateTimingOffset(global_xcorr_idx, local_xcorr_idx, cxt);
+                        next_segment_num = cxt->processedSegments + 4*cxt->calibWait; //calibWait is avoid others' calibrate signal affects it
+                    } else{
+//                           __android_log_print(ANDROID_LOG_VERBOSE,"speaker_debug","end time t %.3f", (double)clock()/CLOCKS_PER_SEC);
+                        if(needwaitFSK){
+                            __android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "get one more chunk for FSK debuging");
+                            cxt->waitforFSK = JNI_TRUE;
+                        }else{
+                            user_id = check_user_id(cxt->data + global_xcorr_idx + cxt->numSyms*(cxt->N0 + cxt->Ns) + cxt->N0 + 150, cxt->N_FSK);
+                            setReply(global_xcorr_idx, cxt, user_id);
+                            next_segment_num = cxt->processedSegments + 4*4 + 2;
+                        }
+
+
+                    }
+
+                }
+            }
+            free(result);
+
+        }
+        else if(cxt->processedSegments > 0) {//  wait for one more flag
+            // look back half a second
+            int globalOffset = (cxt->processedSegments-1) * (cxt->bigBufferSize);
+
+            short *data = cxt->data +
+                          (int) ((cxt->bigBufferSize * (double) (cxt->processedSegments - 1)));
+            clock_t t0 = clock();
+            //__android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "if condition 3 before xcorr");
+            int *result = xcorr_helper2(context, data, globalOffset, cxt->bigBufferSize*2);
+            //__android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "if condition 3 after xcorr");
+            clock_t t1 = clock();
+            __android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "return idx in phase 2 %d to %d, %d, with time %.3f",  result[0], result[1], result[2], (double)(t1 - t0)/CLOCKS_PER_SEC );
+
+            local_xcorr_idx = result[0];
+            int naiser_out = result[2];
+            jboolean needwaitFSK = cxt->processedSegments > 0 && local_xcorr_idx + (cxt->numSyms)*(cxt->N0 + cxt->Ns) + cxt->N0  + cxt->N_FSK + 200 >= 2*cxt->bigBufferSize;
+            if (local_xcorr_idx >= 0 && naiser_out >= 0) {
+                global_xcorr_idx = result[0]+globalOffset;
+
+                last_chirp_idx = global_xcorr_idx;
+
+                cxt->getOneMoreFlag = JNI_FALSE;
+                __android_log_print(ANDROID_LOG_VERBOSE,"speaker_debug","detect leader chirp in phase 2 = %d, and local_idx=%d, tolerance = %d", global_xcorr_idx, local_xcorr_idx, 2*cxt->bigBufferSize - cxt->numSyms*(cxt->N0 + cxt->Ns) - 200);
+                if (cxt->timingOffset==0) {
+                    self_chirp_idx = global_xcorr_idx;
+                    updateTimingOffset(global_xcorr_idx,local_xcorr_idx,cxt);
+                    next_segment_num = cxt->processedSegments + 4*cxt->calibWait;
+                }else{
+                    __android_log_print(ANDROID_LOG_VERBOSE,"speaker_debug","end time t %.3f", (double)clock()/CLOCKS_PER_SEC);
+                    if(needwaitFSK){
+                        __android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "get one more chunk for FSK debuging");
+                        cxt->waitforFSK = JNI_TRUE;
+                    }else{
+                        user_id = check_user_id(cxt->data + global_xcorr_idx + cxt->numSyms*(cxt->N0 + cxt->Ns) + cxt->N0 + 150, cxt->N_FSK);
+                        setReply(global_xcorr_idx, cxt, user_id);
+                        next_segment_num = cxt->processedSegments + 4*4 + 2;
+                    }
+
+                }
+
+            } else if (local_xcorr_idx < 0 || naiser_out < 0) {
+                // occurs in the case of noise
+//                __android_log_print(ANDROID_LOG_VERBOSE, "debug", "get one more flag set to false 2");
+                cxt->getOneMoreFlag = JNI_FALSE;
+            }
+            free(result);
+        }
+
+    }
+    cxt->processedSegments+=1;
+//    __android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "thread finish");
+}
+
+
+
 
 double getdist(int earier_chirp_idx, int later_chirp_index,int delay,int dtx,int drx, double speed) {
     double diff = (later_chirp_index - earier_chirp_idx) - delay;
