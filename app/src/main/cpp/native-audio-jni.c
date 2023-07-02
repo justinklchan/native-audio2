@@ -1608,11 +1608,12 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
 //        char* str1 = getString_s(cxt->refData, cxt->preamble_len);
 //        int a = 1;
 
-        // copy at beginning
+        // copy at beginning for init calibrate
         if (responder) {
             memcpy(cxt->data + initialOffset, data, N_ref * sizeof(short));
         }
 
+        // for the leader copy the data into the buffers to period sent
         if (!runxcorr && !responder){
             for (int index = 0; index < bufferSize_spk * totalSpeakerLoops; index += tempSendDelay) {
                 __android_log_print(ANDROID_LOG_VERBOSE, "debug", "FILLING %d %d",index, bufferSize_spk * totalSpeakerLoops);
