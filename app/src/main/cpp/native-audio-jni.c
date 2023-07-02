@@ -803,7 +803,7 @@ void* xcorr_thread(void* context) {
             setReply(last_chirp_idx, cxt, user_id);
             next_segment_num = cxt->processedSegments + 4*4 - 1;
         }
-        else if (!cxt->getOneMoreFlag && cxt->processedSegments > 0) {
+        else if (!cxt->getOneMoreFlag && cxt->processedSegments > 0) { // not wait for one more flag
             int globalOffset=0;
             short *data = cxt->data + (cxt->bigBufferSize * (cxt->processedSegments - 1));
 
@@ -864,7 +864,7 @@ void* xcorr_thread(void* context) {
             free(result);
 
         }
-        else if(cxt->processedSegments > 0) {
+        else if(cxt->processedSegments > 0) {// not wait for one more flag
             // look back half a second
             int globalOffset = (cxt->processedSegments-1) * (cxt->bigBufferSize);
 
@@ -1605,8 +1605,6 @@ Java_com_example_nativeaudio_NativeAudio_calibrate(JNIEnv *env, jclass clazz,jsh
         cxt->calibWait=calibWait;
         cxt->refData=calloc(N_ref, sizeof(short));
         memcpy(cxt->refData,refData, N_ref*sizeof(short));
-//        char* str1 = getString_s(cxt->refData, cxt->preamble_len);
-//        int a = 1;
 
         // copy at beginning for init calibrate
         if (responder) {

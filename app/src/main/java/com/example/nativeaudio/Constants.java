@@ -658,11 +658,11 @@ public class Constants {
             CP = false;
             numsym=4;
             leader_sig=FileOperations.readrawasset_binary(cxt, R.raw.seq5_fsk_0_1920_540_2720_1000_2720);
-            leader_pre1 =new double[Ns];
+            leader_pre1 =new double[Ns]; // this is the single OFDM symbol from 0-1
             for (int i = 0; i < Ns; i++) {
                 leader_pre1[i]=leader_sig[i+N0]/31000.0;
             }
-            leader_pre2 = new double[numsym*(Ns + N0)];
+            leader_pre2 = new double[numsym*(Ns + N0)]; // this is the 4 OFDM symbols from 0-1
             for (int i = 0; i < leader_pre2.length; i++) {
                 leader_pre2[i]=leader_sig[i]/31000.0;
             }
@@ -739,7 +739,42 @@ public class Constants {
                 }
             }
         }
+        else if (Constants.fileID==7) {
+            txt="FMCW";
+            Ns = 9300;
+            N0 = 0;
+            N_FSK = 0;
+            CP = false;
+            numsym = 4;
 
+            sig=FileOperations.readrawasset_binary(cxt, R.raw.FMCW);
+            leader_sig=FileOperations.readrawasset_binary(cxt, R.raw.FMCW);
+            leader_pre1 =new double[Ns]; // this is the single OFDM symbol from 0-1
+            leader_pre2 = new double[Ns]; // this is the 4 OFDM symbols from 0-1
+            for (int i = 0; i < Ns; i++) {
+                leader_pre1[i]=leader_sig[i]/31000.0;
+                leader_pre2[i]=leader_sig[i]/31000.0;
+            }
+
+        }
+        else if (Constants.fileID==8) {
+            txt="SNR_1260_540_1000_5000";
+            Ns = 9300;
+            N0 = 0;
+            N_FSK = 0;
+            CP = false;
+            numsym = 4;
+
+            sig=FileOperations.readrawasset_binary(cxt, R.raw.SNR_1260_540_1000_5000);
+            leader_sig=FileOperations.readrawasset_binary(cxt, R.raw.SNR_1260_540_1000_5000);
+            leader_pre1 =new double[Ns]; // this is the single OFDM symbol from 0-1
+            leader_pre2 = new double[Ns]; // this is the 4 OFDM symbols from 0-1
+            for (int i = 0; i < Ns; i++) {
+                leader_pre1[i]=leader_sig[i]/31000.0;
+                leader_pre2[i]=leader_sig[i]/31000.0;
+            }
+
+        }
 
         if (Utils.max(pre1) > 2) {
             Utils.div(pre1, 32767);
