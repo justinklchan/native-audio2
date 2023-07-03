@@ -35,11 +35,11 @@ public class Constants {
     static int bias=240;
     static int initSleep=0;
     static float xcorrthresh=2f;
-    public static float replyDelay = 3.0f;
+    public static float replyDelay = 3.0f; // for sender this is sending period, for replier, this is the minimum reply interval
 //    static int calibSigLen = 4800;;
     static boolean water,reply,naiser=true,runxcorr=true;
     static float vol=0.01f, minPeakDistance=1.5f;
-    static int fileID=0;
+    static int fileID=6;
     static int recTime=30;
     static int N0;
     static int Ns;
@@ -747,8 +747,8 @@ public class Constants {
             CP = false;
             numsym = 4;
 
-            sig=FileOperations.readrawasset_binary(cxt, R.raw.FMCW);
-            leader_sig=FileOperations.readrawasset_binary(cxt, R.raw.FMCW);
+            sig=FileOperations.readrawasset_binary(cxt, R.raw.fmcw);
+            leader_sig=FileOperations.readrawasset_binary(cxt, R.raw.fmcw);
             leader_pre1 =new double[Ns]; // this is the single OFDM symbol from 0-1
             leader_pre2 = new double[Ns]; // this is the 4 OFDM symbols from 0-1
             for (int i = 0; i < Ns; i++) {
@@ -765,8 +765,8 @@ public class Constants {
             CP = false;
             numsym = 4;
 
-            sig=FileOperations.readrawasset_binary(cxt, R.raw.SNR_1260_540_1000_5000);
-            leader_sig=FileOperations.readrawasset_binary(cxt, R.raw.SNR_1260_540_1000_5000);
+            sig=FileOperations.readrawasset_binary(cxt, R.raw.snr_1260_540_1000_5000);
+            leader_sig=FileOperations.readrawasset_binary(cxt, R.raw.snr_1260_540_1000_5000);
             leader_pre1 =new double[Ns]; // this is the single OFDM symbol from 0-1
             leader_pre2 = new double[Ns]; // this is the 4 OFDM symbols from 0-1
             for (int i = 0; i < Ns; i++) {
@@ -776,12 +776,12 @@ public class Constants {
 
         }
 
-        if (Utils.max(pre1) > 2) {
-            Utils.div(pre1, 32767);
-        }
-        if (Utils.max(pre2) > 2) {
-            Utils.div(pre2,32767);
-        }
+        //if (Utils.max(pre1) > 2) {
+        //    Utils.div(pre1, 32767);
+        //}
+        //if (Utils.max(pre2) > 2) {
+        //    Utils.div(pre2,32767);
+        //}
 
         String finalTxt = txt;
         (NativeAudio.av).runOnUiThread(new Runnable() {

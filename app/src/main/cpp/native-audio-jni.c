@@ -87,12 +87,13 @@ int naiser_index_to_process=-1;
 int speed=-1;
 int sendDelay=-1;
 jboolean responder=JNI_FALSE;
-int* xcorr_helper(void* context, short* data, int globalOffset, short* globalData);
+int* xcorr_helper(void* context, short* data, int globalOffset, int N);
 int* xcorr_helper2(void* context, short* data, int globalOffset, int N);
 jboolean freed = JNI_FALSE;
 
 float initialCalibrationDelay=0;
 int chirpsPlayed = 0;
+int period_wait = 2; // the interval between different recv signal detection
 int recv_indexes[150];
 double dtx = .8/100;
 double drx = 3.3/100;
@@ -801,7 +802,7 @@ void* xcorr_thread(void* context) {
             //__android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "if condition 1 after userid");
             cxt->waitforFSK = JNI_FALSE;
             setReply(last_chirp_idx, cxt, user_id);
-            next_segment_num = cxt->processedSegments + 4*4 - 1;
+            next_segment_num = cxt->processedSegments + 4*4 - 1; // 4*4*0.25 = 4s
         }
         else if (!cxt->getOneMoreFlag && cxt->processedSegments > 0) { // not wait for one more flag
             int globalOffset=0;
@@ -926,17 +927,8 @@ void* xcorr_thread2(void* context) {
     if (cxt->runXcorr && cxt->processedSegments >= next_segment_num) {
         int global_xcorr_idx=-1;
         int local_xcorr_idx=-1;
-        int user_id = -1;
 
-        if(cxt->waitforFSK && cxt->processedSegments > 0){
-            //__android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "if condition 1 before userid");
-            user_id = check_user_id(cxt->data + last_chirp_idx + cxt->numSyms*(cxt->N0 + cxt->Ns) + cxt->N0 + 150, cxt->N_FSK);
-            //__android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "if condition 1 after userid");
-            cxt->waitforFSK = JNI_FALSE;
-            setReply(last_chirp_idx, cxt, user_id);
-            next_segment_num = cxt->processedSegments + 4*4 - 1;
-        }
-        else if (!cxt->getOneMoreFlag && cxt->processedSegments > 0) { // not wait for one more flag
+        if (!cxt->getOneMoreFlag && cxt->processedSegments > 0) { // not wait for one more flag
             int globalOffset=0;
             short *data = cxt->data + (cxt->bigBufferSize * (cxt->processedSegments - 1));
 
@@ -957,7 +949,6 @@ void* xcorr_thread2(void* context) {
 
                 jboolean c1 = cxt->processedSegments > 0 && local_xcorr_idx - cxt->bigBufferSize  >= 1000;
                 jboolean c2 = cxt->processedSegments > 0 && local_xcorr_idx - cxt->bigBufferSize  >= 1000;
-                jboolean needwaitFSK = cxt->processedSegments > 0 && local_xcorr_idx + (cxt->numSyms)*(cxt->N0 + cxt->Ns) + cxt->N0  + cxt->N_FSK + 200 >= 2*cxt->bigBufferSize;
 
                 if ((c1 || c2)) { // wait for next chunk
                     __android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "get one more flag set to true");
@@ -965,11 +956,6 @@ void* xcorr_thread2(void* context) {
                 }
                 else {
                     global_xcorr_idx = result[0] + globalOffset;
-//                    if (xcorr_counter < 5) {
-//                        //                        __android_log_print(ANDROID_LOG_VERBOSE, "chirp", "got chirp1 %d %d %d",xcorr_counter,global_xcorr_idx,naiser_idx);
-//                        chirp_indexes[xcorr_counter++] = global_xcorr_idx;
-//                        lastidx = global_xcorr_idx;
-//                    }
                     last_chirp_idx = global_xcorr_idx;
                     __android_log_print(ANDROID_LOG_VERBOSE,"speaker_debug","detect leader chirp in phase 1 = %d, and local_idx=%d, tolerance = %d", global_xcorr_idx, local_xcorr_idx, 2*cxt->bigBufferSize - cxt->numSyms*(cxt->N0 + cxt->Ns) - 200);
 
@@ -979,19 +965,9 @@ void* xcorr_thread2(void* context) {
                         updateTimingOffset(global_xcorr_idx, local_xcorr_idx, cxt);
                         next_segment_num = cxt->processedSegments + 4*cxt->calibWait; //calibWait is avoid others' calibrate signal affects it
                     } else{
-//                           __android_log_print(ANDROID_LOG_VERBOSE,"speaker_debug","end time t %.3f", (double)clock()/CLOCKS_PER_SEC);
-                        if(needwaitFSK){
-                            __android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "get one more chunk for FSK debuging");
-                            cxt->waitforFSK = JNI_TRUE;
-                        }else{
-                            user_id = check_user_id(cxt->data + global_xcorr_idx + cxt->numSyms*(cxt->N0 + cxt->Ns) + cxt->N0 + 150, cxt->N_FSK);
-                            setReply(global_xcorr_idx, cxt, user_id);
-                            next_segment_num = cxt->processedSegments + 4*4 + 2;
-                        }
-
-
+                            setReply(global_xcorr_idx, cxt, 0);
+                            next_segment_num = cxt->processedSegments + period_wait*4 + 2;
                     }
-
                 }
             }
             free(result);
@@ -1012,7 +988,6 @@ void* xcorr_thread2(void* context) {
 
             local_xcorr_idx = result[0];
             int naiser_out = result[2];
-            jboolean needwaitFSK = cxt->processedSegments > 0 && local_xcorr_idx + (cxt->numSyms)*(cxt->N0 + cxt->Ns) + cxt->N0  + cxt->N_FSK + 200 >= 2*cxt->bigBufferSize;
             if (local_xcorr_idx >= 0 && naiser_out >= 0) {
                 global_xcorr_idx = result[0]+globalOffset;
 
@@ -1026,15 +1001,8 @@ void* xcorr_thread2(void* context) {
                     next_segment_num = cxt->processedSegments + 4*cxt->calibWait;
                 }else{
                     __android_log_print(ANDROID_LOG_VERBOSE,"speaker_debug","end time t %.3f", (double)clock()/CLOCKS_PER_SEC);
-                    if(needwaitFSK){
-                        __android_log_print(ANDROID_LOG_VERBOSE, "speaker_debug", "get one more chunk for FSK debuging");
-                        cxt->waitforFSK = JNI_TRUE;
-                    }else{
-                        user_id = check_user_id(cxt->data + global_xcorr_idx + cxt->numSyms*(cxt->N0 + cxt->Ns) + cxt->N0 + 150, cxt->N_FSK);
-                        setReply(global_xcorr_idx, cxt, user_id);
-                        next_segment_num = cxt->processedSegments + 4*4 + 2;
-                    }
-
+                    setReply(global_xcorr_idx, cxt, 0);
+                    next_segment_num = cxt->processedSegments + period_wait*4 + 2;  // assume the
                 }
 
             } else if (local_xcorr_idx < 0 || naiser_out < 0) {
@@ -1215,7 +1183,7 @@ void bqRecorderCallback(SLAndroidSimpleBufferQueueItf bq, void *context)
     if (!wroteToDisk && cxt->runXcorr && cxt->responder) {
         if (micCounter%cxt->bigBufferTimes==0) {
             pthread_t t;
-            pthread_create(&t, NULL, xcorr_thread, context);
+            pthread_create(&t, NULL, xcorr_thread2, context);
         }
     }
 }
@@ -2218,6 +2186,7 @@ int findhpeak(double* h, int Ntx1, int bias) {
 }
 
 // if output is positive, good it passes, else... fail
+// naiser correlation and channel estimation
 int corr2(int N, int xcorr_idx, double* filteredData, mycontext* cxt2, int globalOffset) {
 //    __android_log_print(ANDROID_LOG_VERBOSE, "debug2","corr2");
 //    int* out = calloc(2,sizeof(int));
@@ -2268,6 +2237,8 @@ int corr2(int N, int xcorr_idx, double* filteredData, mycontext* cxt2, int globa
         int start_idx2 = xcorr_idx - bias +1;
         int end_idx2 = start_idx2 + Ns2;
         __android_log_print(ANDROID_LOG_VERBOSE,"speaker_debug","channel est begin");
+
+
         if (start_idx2 >= 0 && end_idx2 < N && naiser_idx > 0) {
             int BW1=1000;
             int BW2=5000;
@@ -2377,6 +2348,9 @@ int* xcorr_helper2(void* context, short* data, int globalOffset, int N) {
         }
         result[2] = idx; // naiser out
     }
+    else if ((!cxt->naiser) && xcorr_out[0] > 0){
+        result[2] =  xcorr_out[0];
+    }
     //__android_log_print(ANDROID_LOG_VERBOSE,"speaker_debug","corr2 end");
     clock_t t2 = clock();
     double time_spent0 = (double)(t0 - t_minus) / CLOCKS_PER_SEC;
@@ -2388,6 +2362,7 @@ int* xcorr_helper2(void* context, short* data, int globalOffset, int N) {
 
     return result;
 }
+
 
 JNIEXPORT void JNICALL
 Java_com_example_nativeaudio_NativeAudio_testxcorr(JNIEnv *env, jclass clazz,jdoubleArray tempData,
